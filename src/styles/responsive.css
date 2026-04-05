@@ -110,6 +110,10 @@
     .subject-study-layout { grid-template-columns: 1fr; }
     .chapter-nav { position: static; }
 
+    /* Info */
+    .info-grid-2 { grid-template-columns: 1fr; }
+    .info-links-grid { grid-template-columns: 1fr; }
+
     /* Footer */
     .footer-content { grid-template-columns: 1fr 1fr; gap: 32px; }
     .footer-brand { grid-column: 1 / -1; }
@@ -202,6 +206,16 @@
     .topic-content { padding: 16px 20px; margin: 0 8px 8px; font-size: 14px; }
     .subject-nav-bottom { flex-direction: column; }
     .subject-nav-btn { width: 100%; }
+
+    /* Info */
+    .info-card { padding: 24px 20px; }
+    .info-card-header h2 { font-size: 17px; }
+    .info-highlight-row { grid-template-columns: 1fr; gap: 10px; }
+    .info-highlight { padding: 14px; }
+    .info-highlight-value { font-size: 16px; }
+    .info-subject-item { padding: 14px 16px; gap: 12px; }
+    .info-table th { width: 90px; font-size: 13px; padding: 10px 12px; }
+    .info-table td { font-size: 13px; padding: 10px 12px; }
 
     /* Footer */
     .footer-content { grid-template-columns: 1fr; gap: 32px; }

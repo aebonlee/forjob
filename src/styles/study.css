@@ -247,83 +247,283 @@
     border-radius: var(--radius-full);
 }
 
-/* ===== Exam Info Section ===== */
-.exam-info-section {
-    padding: calc(var(--nav-height) + 32px) 0 80px;
+/* ===== Info Page ===== */
+.info-page {
+    padding-bottom: 80px;
 }
-.exam-info-content {
-    max-width: 800px;
-    margin: 0 auto;
-}
-.exam-info-block {
+.info-card {
     background: var(--bg-white);
     border: 1px solid var(--border-light);
-    border-radius: var(--radius-lg);
-    padding: 32px;
+    border-radius: var(--radius-xl);
+    padding: 36px;
     margin-bottom: 24px;
 }
-.exam-info-block h3 {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border-light);
+.info-card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
 }
-.exam-info-block p {
+.info-card-header h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+}
+.info-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.info-card-icon.overview { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+.info-card-icon.pilgi { background: rgba(27, 58, 107, 0.08); color: var(--primary-blue); }
+.info-card-icon.silgi { background: rgba(16, 185, 129, 0.08); color: #10B981; }
+.info-card-icon.subjects { background: rgba(139, 92, 246, 0.08); color: #8B5CF6; }
+.info-card-icon.schedule { background: rgba(245, 158, 11, 0.08); color: #F59E0B; }
+.info-card-icon.links { background: rgba(99, 102, 241, 0.08); color: #6366F1; }
+
+.info-card-text {
     font-size: 15px;
     color: var(--text-secondary);
     line-height: 1.8;
-    margin-bottom: 12px;
+    margin-bottom: 24px;
 }
-.exam-info-block ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.info-card-text strong {
+    color: var(--text-primary);
 }
-.exam-info-block li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 8px 0;
-    font-size: 14px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    border-bottom: 1px solid var(--bg-light-gray);
-}
-.exam-info-block li:last-child {
-    border-bottom: none;
-}
-.exam-info-block li::before {
-    content: '\2022';
-    color: var(--primary-blue);
-    font-weight: 700;
-    flex-shrink: 0;
+.info-card-action {
+    margin-top: 20px;
+    text-align: center;
 }
 
-/* Exam Schedule Table */
-.exam-schedule-table {
+/* Highlight Row */
+.info-highlight-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+.info-highlight {
+    background: var(--bg-light-gray);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    text-align: center;
+}
+.info-highlight-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+.info-highlight-value {
+    display: block;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary-blue);
+}
+
+/* Info Grid 2 Column */
+.info-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+/* Info Table */
+.info-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 16px;
 }
-.exam-schedule-table th {
-    padding: 12px 16px;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-light);
-    text-align: left;
-    background: var(--bg-light-gray);
-    border-bottom: 2px solid var(--border-light);
-}
-.exam-schedule-table td {
-    padding: 12px 16px;
+.info-table th,
+.info-table td {
+    padding: 14px 16px;
     font-size: 14px;
-    color: var(--text-primary);
+    text-align: left;
     border-bottom: 1px solid var(--border-light);
 }
-.exam-schedule-table tr:hover td {
+.info-table th {
+    font-weight: 600;
+    color: var(--text-light);
+    width: 120px;
+    white-space: nowrap;
+    background: transparent;
+}
+.info-table td {
+    color: var(--text-primary);
+}
+.info-table td strong {
+    color: var(--primary-blue);
+    font-weight: 700;
+}
+.info-table.schedule th {
+    font-weight: 700;
+    color: var(--text-light);
     background: var(--bg-light-gray);
+    border-bottom: 2px solid var(--border-light);
+    width: auto;
+}
+.info-table.schedule td {
+    font-size: 14px;
+}
+.info-table.schedule tr:hover td {
+    background: var(--bg-light-gray);
+}
+.info-table-wrap {
+    overflow-x: auto;
+}
+
+/* Round Badge */
+.info-round-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    background: rgba(27, 58, 107, 0.08);
+    color: var(--primary-blue);
+    white-space: nowrap;
+}
+.info-round-badge.silgi {
+    background: rgba(16, 185, 129, 0.08);
+    color: #059669;
+}
+
+/* Note */
+.info-note {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 16px;
+}
+
+/* Subjects Grid */
+.info-subjects-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.info-subject-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--bg-light-gray);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--accent);
+    transition: var(--transition-base);
+}
+.info-subject-item:hover {
+    box-shadow: var(--shadow-sm);
+    transform: translateX(4px);
+}
+.info-subject-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+.info-subject-body {
+    flex: 1;
+    min-width: 0;
+}
+.info-subject-body h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+.info-subject-body p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+.info-subject-link {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    flex-shrink: 0;
+    transition: var(--transition-base);
+    text-decoration: none;
+}
+.info-subject-link:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #FFFFFF;
+}
+
+/* Links Grid */
+.info-links-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+.info-link-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px;
+    background: var(--bg-light-gray);
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-base);
+}
+.info-link-card:hover {
+    border-color: var(--primary-blue);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+}
+.info-link-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: var(--bg-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--primary-blue);
+    flex-shrink: 0;
+}
+.info-link-card strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+.info-link-card p {
+    font-size: 12px;
+    color: var(--text-light);
+    margin: 0;
+}
+.info-link-ext {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--text-light);
+    flex-shrink: 0;
 }
 
 /* ===== Study Statistics ===== */

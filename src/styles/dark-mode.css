@@ -1056,6 +1056,76 @@ html[data-theme="dark"] .mobile-subnav-link:hover {
     background: var(--bg-light-gray);
 }
 
+/* ===== Info Page Dark ===== */
+html[data-theme="dark"] .info-card {
+    background: var(--bg-white);
+    border-color: var(--border-light);
+}
+html[data-theme="dark"] .info-card-header h2 {
+    color: #F1F5F9;
+}
+html[data-theme="dark"] .info-card-text {
+    color: var(--text-secondary);
+}
+html[data-theme="dark"] .info-highlight {
+    background: var(--bg-light-gray);
+}
+html[data-theme="dark"] .info-highlight-value {
+    color: var(--primary-blue-light);
+}
+html[data-theme="dark"] .info-table th {
+    color: var(--text-light);
+}
+html[data-theme="dark"] .info-table td {
+    color: var(--text-primary);
+    border-bottom-color: var(--border-light);
+}
+html[data-theme="dark"] .info-table td strong {
+    color: var(--primary-blue-light);
+}
+html[data-theme="dark"] .info-table.schedule th {
+    background: var(--bg-light-gray);
+    border-bottom-color: var(--border-light);
+}
+html[data-theme="dark"] .info-table.schedule tr:hover td {
+    background: var(--bg-light-gray);
+}
+html[data-theme="dark"] .info-round-badge {
+    background: rgba(61, 109, 181, 0.15);
+    color: var(--primary-blue-light);
+}
+html[data-theme="dark"] .info-round-badge.silgi {
+    background: rgba(16, 185, 129, 0.12);
+    color: #6EE7B7;
+}
+html[data-theme="dark"] .info-subject-item {
+    background: var(--bg-light-gray);
+}
+html[data-theme="dark"] .info-subject-body h4 {
+    color: #F1F5F9;
+}
+html[data-theme="dark"] .info-subject-body p {
+    color: var(--text-secondary);
+}
+html[data-theme="dark"] .info-subject-link {
+    background: var(--bg-white);
+    border-color: var(--border-light);
+    color: var(--text-light);
+}
+html[data-theme="dark"] .info-link-card {
+    background: var(--bg-light-gray);
+}
+html[data-theme="dark"] .info-link-card:hover {
+    border-color: var(--primary-blue-light);
+}
+html[data-theme="dark"] .info-link-icon {
+    background: var(--bg-white);
+    color: var(--primary-blue-light);
+}
+html[data-theme="dark"] .info-link-card strong {
+    color: #F1F5F9;
+}
+
 /* ===== Focus Visible Dark ===== */
 html[data-theme="dark"] :focus-visible {
     outline-color: var(--primary-blue-light);
