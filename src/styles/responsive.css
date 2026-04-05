@@ -1,0 +1,417 @@
+/* ============================================
+   ForJob - Responsive Design
+   ============================================ */
+
+/* ===== Large Desktop (1400px+) ===== */
+@media (min-width: 1400px) {
+    .container { padding: 0 60px; }
+    .navbar-inner { padding: 0 60px; }
+}
+
+/* ===== Desktop (1024px - 1279px) ===== */
+@media (max-width: 1279px) {
+    .home-features-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .home-stats-grid { gap: 24px; }
+    .home-overview-grid { grid-template-columns: repeat(2, 1fr); }
+    .home-methods-grid { grid-template-columns: repeat(2, 1fr); }
+    .home-exam-info { grid-template-columns: repeat(2, 1fr); }
+    .stat-cards { grid-template-columns: repeat(2, 1fr); }
+    .key-terms-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-content { gap: 32px; }
+    .practice-container { grid-template-columns: 1fr 340px; }
+}
+
+/* ===== Tablet Landscape (768px - 1023px) ===== */
+@media (max-width: 1023px) {
+    :root {
+        --section-padding: 60px;
+    }
+
+    .container { padding: 0 32px; }
+    .navbar-inner { padding: 0 32px; }
+
+    /* Navbar - Show mobile toggle */
+    .nav-links { display: none; }
+    .navbar-actions { display: none; }
+    .mobile-menu-toggle { display: flex; }
+
+    /* Hero */
+    .hero-content {
+        text-align: center;
+        align-items: center;
+    }
+    .hero-title { font-size: 40px; }
+    .hero-description { margin: 0 auto 36px; }
+    .hero-buttons { justify-content: center; }
+    .hero-stats { justify-content: center; }
+
+    /* Home Features */
+    .home-features-grid { grid-template-columns: repeat(2, 1fr); }
+
+    /* Home Overview */
+    .home-overview-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+
+    /* Home Stats */
+    .home-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+
+    /* Home Methods */
+    .home-methods-grid { grid-template-columns: repeat(2, 1fr); }
+
+    /* Home Exam Info */
+    .home-exam-info { grid-template-columns: 1fr; }
+
+    /* Pass Rate */
+    .pass-rate-grid { grid-template-columns: 1fr; }
+
+    /* Exam Container */
+    .exam-container {
+        grid-template-columns: 1fr;
+    }
+    .exam-sidebar {
+        position: relative;
+        top: auto;
+        height: auto;
+        border-left: none;
+        border-top: 1px solid var(--border-light);
+        order: -1;
+    }
+    .question-nav-grid {
+        grid-template-columns: repeat(10, 1fr);
+    }
+
+    /* Dashboard */
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .stat-cards { grid-template-columns: repeat(2, 1fr); }
+
+    /* Practice */
+    .practice-container { grid-template-columns: 1fr; }
+    .practice-sidebar {
+        position: relative;
+        top: auto;
+    }
+
+    /* Key Terms */
+    .key-terms-grid { grid-template-columns: repeat(2, 1fr); }
+
+    /* Exam Mode */
+    .exam-mode-grid { grid-template-columns: repeat(2, 1fr); }
+
+    /* Study Stats */
+    .study-stats-grid { grid-template-columns: repeat(3, 1fr); }
+
+    /* Footer */
+    .footer-content { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer-brand { grid-column: 1 / -1; }
+
+    /* Login */
+    .login-card { padding: 40px 32px; }
+
+    /* Page Header */
+    .page-header h1 { font-size: 28px; }
+
+    /* Section Headers */
+    .section-title { font-size: 30px; }
+}
+
+/* ===== Tablet Portrait (640px - 767px) ===== */
+@media (max-width: 767px) {
+    :root {
+        --section-padding: 48px;
+        --nav-height: 64px;
+    }
+
+    .container { padding: 0 24px; }
+    .navbar-inner { padding: 0 24px; }
+
+    /* Hero */
+    .hero-title { font-size: 32px; }
+    .hero-description { font-size: 15px; }
+    .hero-buttons { flex-direction: column; width: 100%; }
+    .hero-buttons .btn { width: 100%; }
+    .hero-stats { flex-direction: column; gap: 16px; text-align: center; }
+    .scroll-indicator { display: none; }
+
+    /* Home Features */
+    .home-features-grid { grid-template-columns: 1fr; gap: 20px; }
+    .home-feature-card { padding: 32px 24px; }
+
+    /* Home Overview */
+    .home-overview-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+
+    /* Home Stats */
+    .home-stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .home-stat-number { font-size: 32px; }
+
+    /* Home Methods */
+    .home-methods-grid { grid-template-columns: 1fr; }
+
+    /* Exam */
+    .exam-main { padding: 24px; }
+    .question-card { padding: 24px; }
+    .question-nav-grid { grid-template-columns: repeat(10, 1fr); }
+    .exam-header { flex-direction: column; align-items: stretch; }
+    .exam-header-actions { justify-content: center; }
+    .exam-timer-display { font-size: 20px; }
+    .exam-mode-grid { grid-template-columns: 1fr; }
+
+    /* Exam Result */
+    .result-summary { grid-template-columns: 1fr; }
+    .total-score-number { font-size: 48px; }
+    .result-actions { flex-direction: column; }
+    .result-actions .btn { width: 100%; }
+
+    /* Dashboard */
+    .stat-cards { grid-template-columns: 1fr 1fr; }
+    .stat-number { font-size: 28px; }
+
+    /* Study */
+    .study-stats-grid { grid-template-columns: repeat(3, 1fr); }
+    .bookmark-filter { flex-wrap: wrap; }
+    .wrong-answer-sort { flex-wrap: wrap; }
+
+    /* Key Terms */
+    .key-terms-grid { grid-template-columns: 1fr; }
+
+    /* Footer */
+    .footer-content { grid-template-columns: 1fr; gap: 32px; }
+    .footer-brand { grid-column: auto; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+
+    /* Login */
+    .login-card { padding: 32px 24px; }
+    .login-title { font-size: 22px; }
+
+    /* Page Header */
+    .page-header { padding: calc(var(--nav-height) + 32px) 0 32px; margin-bottom: 28px; }
+    .page-header h1 { font-size: 24px; }
+    .page-desc { font-size: 14px; }
+
+    /* Section Headers */
+    .section-header { margin-bottom: 40px; }
+    .section-title { font-size: 26px; }
+    .section-subtitle { font-size: 15px; }
+
+    /* CTA */
+    .home-cta-content h2 { font-size: 28px; }
+    .home-cta-content p { font-size: 15px; }
+    .home-cta-buttons { flex-direction: column; }
+    .home-cta-buttons .btn { width: 100%; text-align: center; justify-content: center; }
+
+    /* 404 */
+    .not-found-code { font-size: 80px; }
+    .not-found-title { font-size: 20px; }
+    .not-found-actions { flex-direction: column; }
+}
+
+/* ===== Mobile (under 640px) ===== */
+@media (max-width: 639px) {
+    :root {
+        --section-padding: 40px;
+    }
+
+    body { font-size: 14px; }
+
+    .container { padding: 0 20px; }
+    .navbar-inner { padding: 0 16px; }
+
+    /* Navbar */
+    .navbar-logo { font-size: 18px; gap: 8px; }
+
+    /* Hero */
+    .hero-content { padding: calc(var(--nav-height) + 24px) 0 24px; }
+    .hero-title { font-size: 28px; }
+    .hero-description { font-size: 14px; margin-bottom: 28px; }
+    .hero-badge { font-size: 12px; padding: 6px 16px; }
+
+    /* Home Overview */
+    .home-overview-grid { grid-template-columns: 1fr; }
+
+    /* Home Stats */
+    .home-stats-grid { grid-template-columns: 1fr 1fr; }
+    .home-stat-number { font-size: 28px; }
+    .home-stat-label { font-size: 13px; }
+
+    /* Exam */
+    .exam-main { padding: 16px; }
+    .question-card { padding: 20px; }
+    .option-item { padding: 12px 14px; }
+    .question-nav-grid { grid-template-columns: repeat(8, 1fr); }
+    .subject-tabs { gap: 2px; }
+    .subject-tab { padding: 8px 14px; font-size: 12px; }
+
+    /* Dashboard */
+    .stat-cards { grid-template-columns: 1fr; }
+    .stat-number { font-size: 24px; }
+    .dashboard-card { padding: 20px; }
+    .history-table { font-size: 12px; }
+    .history-table th,
+    .history-table td { padding: 10px 8px; }
+
+    /* Study */
+    .study-stats-grid { grid-template-columns: 1fr; }
+    .question-item { padding: 16px 20px; }
+    .study-tabs .study-tab { padding: 10px 16px; font-size: 14px; }
+
+    /* Silgi */
+    .answer-textarea { min-height: 160px; padding: 16px; }
+    .self-score-slider::-webkit-slider-thumb { width: 28px; height: 28px; }
+
+    /* Footer */
+    .footer { padding: 48px 0 0; }
+
+    /* Login */
+    .login-container { max-width: 100%; }
+    .login-card { padding: 28px 20px; border-radius: var(--radius-lg); }
+    .login-title { font-size: 20px; }
+    .login-options { flex-direction: column; gap: 12px; align-items: flex-start; }
+
+    /* Page Header */
+    .page-header { padding: calc(var(--nav-height) + 24px) 0 24px; margin-bottom: 24px; }
+    .page-header h1 { font-size: 22px; }
+
+    /* Section Headers */
+    .section-title { font-size: 22px; }
+    .section-subtitle { font-size: 14px; }
+    .section-header { margin-bottom: 32px; }
+
+    /* CTA */
+    .home-cta-content h2 { font-size: 24px; }
+    .home-cta-content p { font-size: 14px; margin-bottom: 28px; }
+
+    /* Buttons */
+    .btn { padding: 12px 24px; font-size: 14px; }
+    .btn-lg { padding: 14px 32px; font-size: 16px; }
+
+    /* 404 */
+    .not-found-page { min-height: 50vh; }
+    .not-found-code { font-size: 64px; }
+    .not-found-title { font-size: 18px; }
+    .not-found-desc { font-size: 14px; }
+
+    /* Toast */
+    .toast-container { right: 16px; left: 16px; }
+    .toast { min-width: auto; max-width: 100%; }
+}
+
+/* ===== Small Mobile (under 400px) ===== */
+@media (max-width: 399px) {
+    .container { padding: 0 16px; }
+    .navbar-inner { padding: 0 12px; }
+
+    .hero-title { font-size: 24px; }
+    .hero-description { font-size: 13px; }
+
+    .home-features-grid { gap: 16px; }
+    .home-feature-card { padding: 24px 20px; }
+    .home-feature-icon { width: 56px; height: 56px; font-size: 24px; }
+
+    .home-stats-grid { gap: 16px; }
+    .home-stat-number { font-size: 24px; }
+
+    .section-title { font-size: 20px; }
+    .section-subtitle { font-size: 13px; }
+
+    .page-header h1 { font-size: 20px; }
+
+    /* Exam */
+    .question-nav-grid { grid-template-columns: repeat(5, 1fr); }
+    .question-card { padding: 16px; }
+    .option-item { padding: 10px 12px; gap: 10px; }
+    .exam-timer-display { font-size: 18px; }
+    .total-score-number { font-size: 40px; }
+
+    /* Dashboard */
+    .stat-card { padding: 20px; }
+    .prediction-score { font-size: 36px; }
+
+    /* Login */
+    .login-card { padding: 24px 16px; }
+    .login-btn { padding: 12px 16px; font-size: 14px; }
+
+    /* Footer */
+    .footer-content { gap: 24px; }
+}
+
+/* ===== Print Styles ===== */
+@media print {
+    .navbar,
+    .footer,
+    .mobile-menu,
+    .scroll-indicator,
+    .exam-sidebar,
+    .question-nav,
+    .exam-timer,
+    .question-bookmark,
+    .question-actions,
+    .exam-submit-section,
+    .practice-sidebar,
+    .study-timer,
+    .skip-nav { display: none !important; }
+
+    body {
+        font-size: 12pt;
+        color: #000;
+        background: #fff;
+    }
+
+    .hero {
+        min-height: auto;
+        padding: 20px 0;
+        background: none !important;
+        color: #000;
+    }
+    .hero-title,
+    .hero-description {
+        color: #000 !important;
+    }
+
+    .page-header {
+        background: none !important;
+        padding: 20px 0;
+    }
+    .page-header h1,
+    .page-desc {
+        color: #000 !important;
+    }
+
+    .card,
+    .question-card,
+    .dashboard-card,
+    .stat-card,
+    .exam-info-block,
+    .term-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+    }
+
+    .exam-container { grid-template-columns: 1fr; }
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .practice-container { grid-template-columns: 1fr; }
+
+    a { text-decoration: underline; }
+    a[href]::after { content: " (" attr(href) ")"; font-size: 0.8em; }
+
+    /* Print question answers */
+    .option-item.correct {
+        border: 2px solid #000 !important;
+        font-weight: bold;
+    }
+    .question-explanation {
+        border: 1px solid #ccc;
+        background: #f9f9f9 !important;
+    }
+}
+
+/* ===== Landscape Orientation Fixes ===== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero { min-height: auto; padding: 80px 0 40px; }
+    .hero-content { padding: calc(var(--nav-height) + 20px) 0 20px; }
+    .login-page { padding: 20px; }
+    .exam-timer-display { font-size: 18px; }
+}
+
+/* ===== High DPI / Retina ===== */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .question-image { image-rendering: -webkit-optimize-contrast; }
+}

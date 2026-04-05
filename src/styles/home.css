@@ -1,0 +1,372 @@
+/* ============================================
+   ForJob - Home Page Sections
+   ============================================ */
+
+/* ===== Features Section (5 Exam Subjects) ===== */
+.home-features-section {
+    padding: var(--section-padding) 0;
+    background: var(--bg-white);
+}
+.home-features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+.home-feature-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    border-left: 4px solid var(--primary-blue);
+    border-radius: var(--radius-lg);
+    padding: 32px 24px;
+    transition: var(--transition-base);
+    position: relative;
+}
+.home-feature-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-6px);
+}
+
+/* Subject-specific border colors */
+.home-feature-card[data-subject="counseling"] { border-left-color: var(--color-counseling); }
+.home-feature-card[data-subject="psychology"] { border-left-color: var(--color-psychology); }
+.home-feature-card[data-subject="jobinfo"] { border-left-color: var(--color-jobinfo); }
+.home-feature-card[data-subject="labor-market"] { border-left-color: var(--color-labor-market); }
+.home-feature-card[data-subject="labor-law"] { border-left-color: var(--color-labor-law); }
+
+.home-feature-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-lg);
+    background: var(--bg-light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: var(--primary-blue);
+    transition: var(--transition-base);
+}
+.home-feature-card:hover .home-feature-icon {
+    background: var(--primary-blue);
+    color: #FFFFFF;
+    transform: scale(1.08);
+}
+.home-feature-card[data-subject="counseling"] .home-feature-icon { color: var(--color-counseling); }
+.home-feature-card[data-subject="psychology"] .home-feature-icon { color: var(--color-psychology); }
+.home-feature-card[data-subject="jobinfo"] .home-feature-icon { color: var(--color-jobinfo); }
+.home-feature-card[data-subject="labor-market"] .home-feature-icon { color: var(--color-labor-market); }
+.home-feature-card[data-subject="labor-law"] .home-feature-icon { color: var(--color-labor-law); }
+
+.home-feature-card[data-subject="counseling"]:hover .home-feature-icon { background: var(--color-counseling); color: #FFFFFF; }
+.home-feature-card[data-subject="psychology"]:hover .home-feature-icon { background: var(--color-psychology); color: #FFFFFF; }
+.home-feature-card[data-subject="jobinfo"]:hover .home-feature-icon { background: var(--color-jobinfo); color: #FFFFFF; }
+.home-feature-card[data-subject="labor-market"]:hover .home-feature-icon { background: var(--color-labor-market); color: #FFFFFF; }
+.home-feature-card[data-subject="labor-law"]:hover .home-feature-icon { background: var(--color-labor-law); color: #FFFFFF; }
+
+.home-feature-card h4 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+.home-feature-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+.home-feature-card .question-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 12px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary-blue);
+    background: rgba(27, 58, 107, 0.06);
+    border-radius: var(--radius-full);
+}
+
+/* ===== Exam Overview Section ===== */
+.home-overview-section {
+    padding: var(--section-padding) 0;
+    background: var(--bg-light-gray);
+}
+.home-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    position: relative;
+}
+.home-overview-step {
+    text-align: center;
+    position: relative;
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 32px 20px;
+    transition: var(--transition-base);
+}
+.home-overview-step:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+}
+.home-overview-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--bg-light-gray);
+    border: 3px solid var(--primary-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 24px;
+    color: var(--primary-blue);
+    transition: var(--transition-base);
+}
+.home-overview-step:hover .home-overview-icon {
+    background: var(--primary-blue);
+    color: #FFFFFF;
+    transform: scale(1.1);
+}
+.home-overview-step-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+.home-overview-step h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+.home-overview-step p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ===== Exam Info Cards ===== */
+.home-exam-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+}
+.exam-info-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 28px 24px;
+    text-align: center;
+    transition: var(--transition-base);
+}
+.exam-info-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+.exam-info-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: var(--bg-light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    font-size: 22px;
+    color: var(--primary-blue);
+}
+.exam-info-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+.exam-info-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ===== Stats Section ===== */
+.home-stats-section {
+    padding: 60px 0;
+    background: var(--primary-gradient);
+}
+.home-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    text-align: center;
+}
+.home-stat {}
+.home-stat-number {
+    font-size: 40px;
+    font-weight: 900;
+    color: #FFFFFF;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+.home-stat-label {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+.home-stat-desc {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+}
+
+/* ===== Study Methods Section ===== */
+.home-methods-section {
+    padding: var(--section-padding) 0;
+    background: var(--bg-white);
+}
+.home-methods-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+.home-method-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 32px 24px;
+    text-align: center;
+    transition: var(--transition-base);
+}
+.home-method-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+}
+.home-method-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-lg);
+    background: var(--bg-light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 28px;
+    color: var(--primary-blue);
+    transition: var(--transition-base);
+}
+.home-method-card:hover .home-method-icon {
+    background: var(--primary-blue);
+    color: #FFFFFF;
+    transform: scale(1.08);
+}
+.home-method-card h4 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+.home-method-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+/* ===== CTA Section ===== */
+.home-cta-section {
+    padding: var(--section-padding) 0;
+    background: var(--hero-bg);
+    text-align: center;
+}
+.home-cta-content {
+    max-width: 640px;
+    margin: 0 auto;
+}
+.home-cta-content h2 {
+    font-size: 36px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 16px;
+    letter-spacing: -0.025em;
+}
+.home-cta-content p {
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.75;
+    margin-bottom: 36px;
+}
+.home-cta-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+.home-cta-buttons .btn-primary {
+    background: #FFFFFF;
+    color: var(--primary-blue);
+    border-color: #FFFFFF;
+}
+.home-cta-buttons .btn-primary:hover {
+    background: transparent;
+    color: #FFFFFF;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+.home-cta-buttons .btn-secondary {
+    color: #FFFFFF;
+    border-color: rgba(255, 255, 255, 0.5);
+}
+.home-cta-buttons .btn-secondary:hover {
+    border-color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* ===== Pass Rate Info ===== */
+.pass-rate-section {
+    padding: var(--section-padding) 0;
+    background: var(--bg-light-gray);
+}
+.pass-rate-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: center;
+}
+.pass-rate-info h3 {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+.pass-rate-info p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 12px;
+}
+.pass-rate-highlight {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 600;
+    color: #059669;
+}
+.pass-rate-chart {
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

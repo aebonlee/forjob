@@ -1,0 +1,239 @@
+/* ============================================
+   ForJob - Hero Section
+   ============================================ */
+
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: var(--hero-bg);
+}
+
+.hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: calc(var(--nav-height) + 80px) 0 120px;
+    max-width: 700px;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 24px;
+    backdrop-filter: blur(8px);
+}
+
+.hero-title {
+    font-size: 48px;
+    font-weight: 900;
+    color: #FFFFFF;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    letter-spacing: -0.03em;
+}
+.hero-title .highlight {
+    background: var(--highlight-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-description {
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.8;
+    margin-bottom: 36px;
+    max-width: 480px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+.hero-buttons .btn-primary {
+    background: #FFFFFF;
+    color: var(--primary-blue);
+    border-color: #FFFFFF;
+}
+.hero-buttons .btn-primary:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+.hero-buttons .btn-secondary {
+    background: transparent;
+    color: #FFFFFF;
+    border-color: rgba(255, 255, 255, 0.5);
+}
+.hero-buttons .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #FFFFFF;
+    transform: translateY(-2px);
+}
+
+/* Hero Stats */
+.hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+.hero-stat-item {}
+.hero-stat-number {
+    font-size: 28px;
+    font-weight: 900;
+    color: #FFFFFF;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+.hero-stat-label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    animation: bounceDown 2s ease-in-out infinite;
+}
+@keyframes bounceDown {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+}
+.mouse {
+    width: 24px;
+    height: 36px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    position: relative;
+}
+.wheel {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 2px;
+    animation: scrollWheel 1.5s ease-in-out infinite;
+}
+.scroll-text {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.4);
+}
+@keyframes scrollWheel {
+    0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+}
+
+/* ============================================
+   Hero Background Animations
+   ============================================ */
+
+/* Particles */
+.particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    animation: particleFloat var(--duration, 20s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+}
+@keyframes particleFloat {
+    0% { transform: translate(0, 0); opacity: 0.4; }
+    25% { transform: translate(var(--x1, 30px), var(--y1, -50px)); opacity: 0.7; }
+    50% { transform: translate(var(--x2, -20px), var(--y2, -100px)); opacity: 0.3; }
+    75% { transform: translate(var(--x3, 15px), var(--y3, -30px)); opacity: 0.6; }
+    100% { transform: translate(0, 0); opacity: 0.4; }
+}
+
+/* Rising Orbs */
+.orbs-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+    animation: orbRise 18s ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+}
+@keyframes orbRise {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% { transform: translateY(-120vh) scale(0.5); opacity: 0; }
+}
+
+/* Geometric Shapes */
+.geo-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+.geo-shape {
+    position: absolute;
+    opacity: 0.12;
+    animation: geoFloat 20s ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+}
+.geo-triangle {
+    width: 0;
+    height: 0;
+    border-left: calc(var(--size, 30px) / 2) solid transparent;
+    border-right: calc(var(--size, 30px) / 2) solid transparent;
+    border-bottom: var(--size, 30px) solid rgba(255, 255, 255, 0.4);
+    background: none;
+}
+.geo-square {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+.geo-hexagon {
+    background: rgba(255, 255, 255, 0.15);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+@keyframes geoFloat {
+    0%, 100% { transform: rotate(0deg) translate(0, 0); }
+    25% { transform: rotate(90deg) translate(20px, -15px); }
+    50% { transform: rotate(180deg) translate(-10px, 10px); }
+    75% { transform: rotate(270deg) translate(15px, 5px); }
+}
