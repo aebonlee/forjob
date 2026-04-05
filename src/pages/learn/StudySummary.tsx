@@ -107,10 +107,8 @@ export default function StudySummary() {
 
   const toggleSidebarCat = (catId: string) => {
     setExpandedSidebarCats((prev) => {
-      const next = new Set(prev);
-      if (next.has(catId)) next.delete(catId);
-      else next.add(catId);
-      return next;
+      if (prev.has(catId)) return new Set();
+      return new Set([catId]);
     });
   };
 
