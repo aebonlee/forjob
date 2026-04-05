@@ -174,10 +174,12 @@ function Level2Content({ user }: { user: any }) {
           <span className="info-card-icon overview"><i className="fa-solid fa-clipboard-list" /></span>
           <h2>시험 개요</h2>
         </div>
+        <div className="info-cert-name">
+          <h3 className="info-cert-name-kr">직업상담사 2급</h3>
+          <span className="info-cert-name-en">Vocational Counselor</span>
+        </div>
         <p className="info-card-text">
-          직업상담사 2급(Vocational Counselor)은 <strong>고용노동부</strong> 관련 국가기술자격으로,
-          <strong>한국산업인력공단</strong>에서 시행합니다.
-          구직자와 구인자에게 직업정보를 제공하고 직업상담을 수행할 수 있는 전문 인력을 양성하기 위한 자격이며,
+          구직자와 구인자에게 직업정보를 제공하고 직업상담을 수행할 수 있는 전문 인력을 양성하기 위한 국가기술자격이며,
           학력, 경력, 연령 제한 없이 <strong>누구나 응시 가능</strong>합니다.
           과정평가형 자격 취득도 가능한 종목입니다.
         </p>
@@ -197,6 +199,10 @@ function Level2Content({ user }: { user: any }) {
           <div className="info-highlight">
             <span className="info-highlight-label">연 시행</span>
             <span className="info-highlight-value">3회</span>
+          </div>
+          <div className="info-highlight">
+            <span className="info-highlight-label">기타 사항</span>
+            <span className="info-highlight-value">과정평가형 취득 가능</span>
           </div>
         </div>
       </section>
@@ -599,10 +605,14 @@ function Level1Content() {
           <span className="info-card-icon overview"><i className="fa-solid fa-clipboard-list" /></span>
           <h2>1급 시험 개요</h2>
         </div>
+        <div className="info-cert-name">
+          <h3 className="info-cert-name-kr">직업상담사 1급</h3>
+          <span className="info-cert-name-en">Vocational Counselor, Senior</span>
+        </div>
         <p className="info-card-text">
-          직업상담사 1급은 <strong>고용노동부</strong> 관련 국가기술자격으로,
-          <strong>한국산업인력공단</strong>에서 시행합니다.
-          2급 대비 심화된 직업상담 전문 역량을 인증하는 자격으로, 응시자격에 <strong>경력 제한</strong>이 있습니다.
+          2급 대비 심화된 직업상담 전문 역량을 인증하는 국가기술자격으로,
+          응시자격에 <strong>경력 제한</strong>이 있습니다.
+          과정평가형 자격 취득도 가능한 종목입니다.
         </p>
         <div className="info-highlight-row">
           <div className="info-highlight">
@@ -620,6 +630,10 @@ function Level1Content() {
           <div className="info-highlight">
             <span className="info-highlight-label">연 시행</span>
             <span className="info-highlight-value">1회 (3회차)</span>
+          </div>
+          <div className="info-highlight">
+            <span className="info-highlight-label">기타 사항</span>
+            <span className="info-highlight-value">과정평가형 취득 가능</span>
           </div>
         </div>
       </section>

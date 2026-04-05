@@ -1103,6 +1103,13 @@ html[data-theme="dark"] .info-card {
 html[data-theme="dark"] .info-card-header h2 {
     color: #F1F5F9;
 }
+html[data-theme="dark"] .info-cert-name {
+    background: rgba(59, 130, 246, 0.06);
+    border-color: var(--border-light);
+    border-left-color: var(--primary-blue);
+}
+html[data-theme="dark"] .info-cert-name-kr { color: #F1F5F9; }
+html[data-theme="dark"] .info-cert-name-en { color: #64748B; }
 html[data-theme="dark"] .info-card-text {
     color: var(--text-secondary);
 }
