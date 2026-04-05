@@ -1,9 +1,10 @@
 -- ============================================
 -- ForJob - 직업상담사 2급 시험 준비
 -- Supabase Schema (forjob_ prefix)
+-- 재실행 안전 (idempotent)
 -- ============================================
 
--- Profiles
+-- ■ Profiles
 CREATE TABLE IF NOT EXISTS forjob_profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   name TEXT,
@@ -14,8 +15,11 @@ CREATE TABLE IF NOT EXISTS forjob_profiles (
 );
 
 ALTER TABLE forjob_profiles ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "profiles_select" ON forjob_profiles;
 CREATE POLICY "profiles_select" ON forjob_profiles FOR SELECT USING (true);
+DROP POLICY IF EXISTS "profiles_insert" ON forjob_profiles;
 CREATE POLICY "profiles_insert" ON forjob_profiles FOR INSERT WITH CHECK (auth.uid() = id);
+DROP POLICY IF EXISTS "profiles_update" ON forjob_profiles;
 CREATE POLICY "profiles_update" ON forjob_profiles FOR UPDATE USING (auth.uid() = id);
 
 -- Auto-create profile on signup
@@ -42,7 +46,7 @@ CREATE TRIGGER on_forjob_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION handle_forjob_new_user();
 
--- Subjects
+-- ■ Subjects
 CREATE TABLE IF NOT EXISTS forjob_subjects (
   id SERIAL PRIMARY KEY,
   code TEXT UNIQUE NOT NULL,
@@ -61,7 +65,7 @@ INSERT INTO forjob_subjects (code, name, exam_type, color, icon, sort_order) VAL
   ('labor_law', '노동관계법규', 'pilgi', '#EF4444', 'fa-solid fa-scale-balanced', 5)
 ON CONFLICT (code) DO NOTHING;
 
--- Questions (Pilgi)
+-- ■ Questions (Pilgi)
 CREATE TABLE IF NOT EXISTS forjob_questions (
   id SERIAL PRIMARY KEY,
   subject_id INT REFERENCES forjob_subjects(id),
@@ -82,9 +86,10 @@ CREATE INDEX IF NOT EXISTS idx_forjob_questions_subject ON forjob_questions(subj
 CREATE INDEX IF NOT EXISTS idx_forjob_questions_year ON forjob_questions(exam_year, exam_session);
 
 ALTER TABLE forjob_questions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "questions_select" ON forjob_questions;
 CREATE POLICY "questions_select" ON forjob_questions FOR SELECT USING (true);
 
--- Silgi Questions
+-- ■ Silgi Questions
 CREATE TABLE IF NOT EXISTS forjob_silgi_questions (
   id SERIAL PRIMARY KEY,
   exam_year INT,
@@ -98,13 +103,14 @@ CREATE TABLE IF NOT EXISTS forjob_silgi_questions (
 );
 
 ALTER TABLE forjob_silgi_questions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "silgi_questions_select" ON forjob_silgi_questions;
 CREATE POLICY "silgi_questions_select" ON forjob_silgi_questions FOR SELECT USING (true);
 
--- Exam Sessions
+-- ■ Exam Sessions (필기 + 실기 연습 공용)
 CREATE TABLE IF NOT EXISTS forjob_exam_sessions (
   id SERIAL PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  exam_type TEXT DEFAULT 'pilgi',
+  exam_type TEXT DEFAULT 'pilgi',        -- 'pilgi' | 'silgi_practice'
   mode TEXT DEFAULT 'exam',
   exam_year INT,
   total_questions INT,
@@ -113,18 +119,36 @@ CREATE TABLE IF NOT EXISTS forjob_exam_sessions (
   score_by_subject JSONB,
   is_pass BOOLEAN DEFAULT false,
   time_spent_sec INT DEFAULT 0,
+  status TEXT DEFAULT 'in_progress',     -- 'in_progress' | 'completed'
   started_at TIMESTAMPTZ DEFAULT NOW(),
   completed_at TIMESTAMPTZ
 );
 
+-- status 컬럼이 없으면 추가 (기존 테이블 호환)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'forjob_exam_sessions' AND column_name = 'status'
+  ) THEN
+    ALTER TABLE forjob_exam_sessions ADD COLUMN status TEXT DEFAULT 'in_progress';
+  END IF;
+END
+$$;
+
 CREATE INDEX IF NOT EXISTS idx_forjob_sessions_user ON forjob_exam_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_forjob_sessions_user_type ON forjob_exam_sessions(user_id, exam_type);
+CREATE INDEX IF NOT EXISTS idx_forjob_sessions_completed ON forjob_exam_sessions(completed_at DESC);
 
 ALTER TABLE forjob_exam_sessions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "sessions_select" ON forjob_exam_sessions;
 CREATE POLICY "sessions_select" ON forjob_exam_sessions FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "sessions_insert" ON forjob_exam_sessions;
 CREATE POLICY "sessions_insert" ON forjob_exam_sessions FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "sessions_update" ON forjob_exam_sessions;
 CREATE POLICY "sessions_update" ON forjob_exam_sessions FOR UPDATE USING (auth.uid() = user_id);
 
--- Exam Answers
+-- ■ Exam Answers
 CREATE TABLE IF NOT EXISTS forjob_exam_answers (
   id SERIAL PRIMARY KEY,
   session_id INT REFERENCES forjob_exam_sessions(id) ON DELETE CASCADE,
@@ -136,12 +160,14 @@ CREATE TABLE IF NOT EXISTS forjob_exam_answers (
 CREATE INDEX IF NOT EXISTS idx_forjob_answers_session ON forjob_exam_answers(session_id);
 
 ALTER TABLE forjob_exam_answers ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "answers_select" ON forjob_exam_answers;
 CREATE POLICY "answers_select" ON forjob_exam_answers FOR SELECT
   USING (EXISTS (SELECT 1 FROM forjob_exam_sessions s WHERE s.id = session_id AND s.user_id = auth.uid()));
+DROP POLICY IF EXISTS "answers_insert" ON forjob_exam_answers;
 CREATE POLICY "answers_insert" ON forjob_exam_answers FOR INSERT
   WITH CHECK (EXISTS (SELECT 1 FROM forjob_exam_sessions s WHERE s.id = session_id AND s.user_id = auth.uid()));
 
--- Bookmarks
+-- ■ Bookmarks
 CREATE TABLE IF NOT EXISTS forjob_bookmarks (
   id SERIAL PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -151,11 +177,14 @@ CREATE TABLE IF NOT EXISTS forjob_bookmarks (
 );
 
 ALTER TABLE forjob_bookmarks ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "bookmarks_select" ON forjob_bookmarks;
 CREATE POLICY "bookmarks_select" ON forjob_bookmarks FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "bookmarks_insert" ON forjob_bookmarks;
 CREATE POLICY "bookmarks_insert" ON forjob_bookmarks FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "bookmarks_delete" ON forjob_bookmarks;
 CREATE POLICY "bookmarks_delete" ON forjob_bookmarks FOR DELETE USING (auth.uid() = user_id);
 
--- Wrong Answers
+-- ■ Wrong Answers
 CREATE TABLE IF NOT EXISTS forjob_wrong_answers (
   id SERIAL PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -166,7 +195,11 @@ CREATE TABLE IF NOT EXISTS forjob_wrong_answers (
 );
 
 ALTER TABLE forjob_wrong_answers ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "wrong_select" ON forjob_wrong_answers;
 CREATE POLICY "wrong_select" ON forjob_wrong_answers FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "wrong_insert" ON forjob_wrong_answers;
 CREATE POLICY "wrong_insert" ON forjob_wrong_answers FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "wrong_update" ON forjob_wrong_answers;
 CREATE POLICY "wrong_update" ON forjob_wrong_answers FOR UPDATE USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "wrong_delete" ON forjob_wrong_answers;
 CREATE POLICY "wrong_delete" ON forjob_wrong_answers FOR DELETE USING (auth.uid() = user_id);
