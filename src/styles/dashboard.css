@@ -9,10 +9,18 @@
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    gap: 28px;
+    margin-top: 28px;
 }
 .dashboard-full-width {
     grid-column: 1 / -1;
+}
+
+/* ===== Dashboard Stats Grid ===== */
+.dashboard-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
 }
 
 /* ===== Stat Cards ===== */
@@ -27,7 +35,7 @@
     background: var(--bg-white);
     border: 1px solid var(--border-light);
     border-radius: var(--radius-lg);
-    padding: 24px;
+    padding: 28px;
     transition: var(--transition-base);
     position: relative;
     overflow: hidden;
@@ -93,17 +101,44 @@
     color: var(--text-light);
     margin-top: 2px;
 }
+.stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: rgba(27, 58, 107, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--primary-blue);
+    margin-bottom: 16px;
+}
 
 /* ===== Dashboard Section Card ===== */
 .dashboard-card {
     background: var(--bg-white);
     border: 1px solid var(--border-light);
     border-radius: var(--radius-lg);
-    padding: 24px;
+    padding: 28px;
     transition: var(--transition-base);
 }
 .dashboard-card:hover {
     box-shadow: var(--shadow-sm);
+}
+.dashboard-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-light);
+}
+.dashboard-card h3 i {
+    color: var(--primary-blue);
+    font-size: 16px;
 }
 .dashboard-card-header {
     display: flex;
@@ -172,8 +207,9 @@
 .weakness-item {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
-    padding: 12px 16px;
+    padding: 14px 18px;
     background: var(--bg-light-gray);
     border-radius: var(--radius-sm);
     transition: var(--transition-base);
@@ -416,4 +452,142 @@
     font-size: 12px;
     color: var(--text-light);
     white-space: nowrap;
+}
+
+/* ===== Dashboard Empty / Good States ===== */
+.dashboard-empty {
+    text-align: center;
+    color: var(--text-light);
+    padding: 40px 20px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+.dashboard-good {
+    text-align: center;
+    color: var(--color-pass);
+    padding: 32px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    background: rgba(16, 185, 129, 0.06);
+    border-radius: var(--radius-md);
+}
+
+/* ===== Recent Exams Header ===== */
+.dashboard-recent-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-light);
+}
+.dashboard-recent-header h3 {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/* ===== History Table Wrapper ===== */
+.history-table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-light);
+}
+.history-table-wrapper .history-table th:first-child {
+    border-radius: var(--radius-md) 0 0 0;
+}
+.history-table-wrapper .history-table th:last-child {
+    border-radius: 0 var(--radius-md) 0 0;
+}
+
+/* ===== Table Badges ===== */
+.table-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+}
+.table-badge.pass {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+.table-badge.fail {
+    background: rgba(239, 68, 68, 0.1);
+    color: #DC2626;
+}
+
+/* ===== Prediction Circle ===== */
+.prediction-circle {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    border: 4px solid var(--border-light);
+    background: var(--bg-light-gray);
+    transition: var(--transition-base);
+}
+.prediction-circle[data-level="high"] {
+    border-color: var(--color-pass);
+    background: rgba(16, 185, 129, 0.06);
+}
+.prediction-circle[data-level="medium"] {
+    border-color: #F59E0B;
+    background: rgba(245, 158, 11, 0.06);
+}
+.prediction-circle[data-level="low"] {
+    border-color: var(--color-fail);
+    background: rgba(239, 68, 68, 0.06);
+}
+.prediction-percent {
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--primary-blue);
+}
+.prediction-circle[data-level="high"] .prediction-percent { color: #059669; }
+.prediction-circle[data-level="medium"] .prediction-percent { color: #D97706; }
+.prediction-circle[data-level="low"] .prediction-percent { color: #DC2626; }
+.prediction-circle .prediction-label {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+
+/* ===== Prediction Stats ===== */
+.prediction-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-light);
+}
+.prediction-stat {
+    text-align: center;
+}
+.prediction-stat-label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+}
+.prediction-stat-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.prediction-empty {
+    text-align: center;
+    color: var(--text-light);
+    padding: 40px 20px;
+    font-size: 14px;
+    line-height: 1.6;
 }

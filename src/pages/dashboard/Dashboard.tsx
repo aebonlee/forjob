@@ -163,7 +163,7 @@ function DashboardContent() {
 
         {/* Recent Exams */}
         <div className="dashboard-card mt-4">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <div className="dashboard-recent-header">
             <h3><i className="fa-solid fa-clock-rotate-left" /> 최근 시험</h3>
             <Link to="/dashboard/history" className="btn btn-sm btn-secondary">전체 보기</Link>
           </div>
@@ -187,7 +187,7 @@ function DashboardContent() {
                       <td>{s.correct_count}/{s.total_questions}</td>
                       <td>{Math.floor(s.time_spent_sec / 60)}분</td>
                       <td>
-                        <span className={`pass-badge ${s.is_pass ? 'pass' : 'fail'}`}>
+                        <span className={`table-badge ${s.is_pass ? 'pass' : 'fail'}`}>
                           {s.is_pass ? '합격' : '불합격'}
                         </span>
                       </td>

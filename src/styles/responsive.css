@@ -90,6 +90,7 @@
     /* Dashboard */
     .dashboard-grid { grid-template-columns: 1fr; }
     .stat-cards { grid-template-columns: repeat(2, 1fr); }
+    .dashboard-stats-grid { grid-template-columns: repeat(2, 1fr); }
 
     /* Practice */
     .practice-container { grid-template-columns: 1fr; }
@@ -199,6 +200,7 @@
 
     /* Dashboard */
     .stat-cards { grid-template-columns: 1fr 1fr; }
+    .dashboard-stats-grid { grid-template-columns: 1fr 1fr; }
     .stat-number { font-size: 28px; }
 
     /* Study */
@@ -326,6 +328,7 @@
 
     /* Dashboard */
     .stat-cards { grid-template-columns: 1fr; }
+    .dashboard-stats-grid { grid-template-columns: 1fr; }
     .stat-number { font-size: 24px; }
     .dashboard-card { padding: 20px; }
     .history-table { font-size: 12px; }
