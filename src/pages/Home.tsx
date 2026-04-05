@@ -373,8 +373,8 @@ function LandingHome() {
                 <div className="hero-schedule-title">
                   <i className="fa-solid fa-calendar-check" /> 2026 시험 일정
                 </div>
-                <div className="hero-schedule-list">
-                  {allEvents.map((evt, idx) => {
+                <div className="hero-schedule-cards">
+                  {allEvents.slice(0, 3).map((evt, idx) => {
                     const typeClass =
                       evt.type === '필기시험' || evt.type === '실기시험' ? 'exam'
                       : evt.type === '필기접수' || evt.type === '실기접수' ? 'register'
@@ -385,7 +385,7 @@ function LandingHome() {
                       : 'fa-solid fa-bullhorn';
                     const ddayText = evt.days < 0 ? '진행중' : evt.days === 0 ? 'D-Day' : `D-${evt.days}`;
                     return (
-                      <div key={idx} className={`hero-schedule-item ${typeClass}${idx === 0 ? ' nearest' : ''}`}>
+                      <div key={idx} className={`hero-schedule-card ${typeClass}${idx === 0 ? ' nearest' : ''}`}>
                         <span className={`hero-schedule-type ${typeClass}`}>
                           <i className={typeIcon} /> {evt.type}
                         </span>
@@ -416,8 +416,8 @@ function LandingHome() {
           </div>
           <div className="home-subjects-grid">
             {SUBJECTS.map((subject, idx) => (
-              <div key={subject.code} className="home-subject-card fade-in-up"
-                style={{ borderLeftColor: subject.color, animationDelay: `${idx * 0.1}s` }}>
+              <div key={subject.code} className="home-subject-card"
+                style={{ borderLeftColor: subject.color }}>
                 <div className="home-subject-icon" style={{ background: `${subject.color}15`, color: subject.color }}>
                   <i className={subject.icon} />
                 </div>

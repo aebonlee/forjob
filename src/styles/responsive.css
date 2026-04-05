@@ -47,7 +47,7 @@
     .hero-title { font-size: 40px; }
     .hero-description { margin: 0 auto 36px; }
     .hero-buttons { justify-content: center; }
-    .hero-exam-schedule { max-width: 520px; margin-left: auto; margin-right: auto; }
+    .hero-exam-schedule { max-width: 600px; margin-left: auto; margin-right: auto; }
 
     /* Home Subjects */
     .home-subjects-grid { grid-template-columns: repeat(3, 1fr); }
@@ -159,13 +159,11 @@
     .hero-description { font-size: 15px; }
     .hero-buttons { flex-direction: column; width: 100%; }
     .hero-buttons .btn { width: 100%; }
-    .hero-exam-schedule { padding: 16px; }
-    .hero-schedule-item { flex-wrap: wrap; gap: 6px; padding: 10px 10px; }
-    .hero-schedule-type { font-size: 10px; min-width: 64px; padding: 3px 8px; }
-    .hero-schedule-label { font-size: 13px; flex: 1 1 auto; }
-    .hero-schedule-date { font-size: 12px; flex-basis: 100%; padding-left: 74px; margin-top: -2px; }
-    .hero-schedule-dday { font-size: 12px; min-width: 48px; position: absolute; right: 10px; top: 10px; }
-    .hero-schedule-item { position: relative; padding-right: 70px; }
+    .hero-schedule-cards { grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .hero-schedule-card { padding: 16px 12px; gap: 8px; }
+    .hero-schedule-label { font-size: 12px; }
+    .hero-schedule-date { font-size: 11px; }
+    .hero-schedule-dday { font-size: 15px; }
     .scroll-indicator { display: none; }
 
     /* Pilgi Home */
@@ -328,6 +326,10 @@
     .hero-title { font-size: 28px; }
     .hero-description { font-size: 14px; margin-bottom: 28px; }
     .hero-badge { font-size: 12px; padding: 6px 16px; }
+    .hero-schedule-cards { grid-template-columns: 1fr; gap: 10px; }
+    .hero-schedule-card { flex-direction: row; align-items: center; padding: 14px 16px; gap: 12px; text-align: left; }
+    .hero-schedule-dday { font-size: 15px; margin-top: 0; margin-left: auto; }
+    .hero-schedule-card.nearest .hero-schedule-dday { font-size: 16px; }
 
     /* Home Overview */
     .home-overview-grid { grid-template-columns: 1fr; }
