@@ -96,7 +96,7 @@ function CheckoutContent() {
       navigate('/confirmation', { state: { orderNumber, items, total: cartTotal, paidAt: now.toISOString() } });
     } catch (err: any) {
       console.error(err);
-      showToast('결제 처리 중 오류가 발생��습니다.', 'error');
+      showToast('결제 처리 중 오류가 발생했습니다.', 'error');
     }
     setProcessing(false);
   };
