@@ -786,18 +786,6 @@ html[data-theme="dark"] .study-timer-btn:hover {
 html[data-theme="dark"] .footer {
     background: #070D1A;
 }
-html[data-theme="dark"] .footer-description {
-    color: rgba(255, 255, 255, 0.7);
-}
-html[data-theme="dark"] .footer-link-list li a {
-    color: rgba(255, 255, 255, 0.7);
-}
-html[data-theme="dark"] .footer-contact p {
-    color: rgba(255, 255, 255, 0.7);
-}
-html[data-theme="dark"] .footer-email a {
-    color: rgba(255, 255, 255, 0.7);
-}
 
 /* ===== Login Dark ===== */
 html[data-theme="dark"] .login-page {
