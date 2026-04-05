@@ -858,13 +858,13 @@ export default function ExamInfo() {
             className={`info-level-tab${level === 'level2' ? ' active' : ''}`}
             onClick={() => setLevel('level2')}
           >
-            <i className="fa-solid fa-2" /> 2급
+            직업상담사 2급
           </button>
           <button
             className={`info-level-tab${level === 'level1' ? ' active' : ''}`}
             onClick={() => setLevel('level1')}
           >
-            <i className="fa-solid fa-1" /> 1급
+            직업상담사 1급
           </button>
         </div>
 
