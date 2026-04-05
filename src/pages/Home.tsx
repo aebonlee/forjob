@@ -127,8 +127,8 @@ export default function Home() {
               <span className="home-stat-label">문항</span>
             </div>
             <div className="home-stat-item">
-              <span className="home-stat-number">150</span>
-              <span className="home-stat-label">분 (시험시간)</span>
+              <span className="home-stat-number">100</span>
+              <span className="home-stat-label">분 (필기시험)</span>
             </div>
             <div className="home-stat-item">
               <span className="home-stat-number">60</span>

@@ -18,7 +18,7 @@ export const EXAM_CONFIG = {
   pilgi: {
     totalQuestions: 100,
     questionsPerSubject: 20,
-    timeLimit: 150 * 60, // 150분 in seconds
+    timeLimit: 100 * 60, // 100분 in seconds
     passScore: 60,
     subjectMinScore: 40,
     optionCount: 4,

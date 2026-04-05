@@ -21,8 +21,8 @@ export default function PilgiHome() {
               <i className="fa-solid fa-desktop" />
             </div>
             <h3>시험 모드</h3>
-            <p>실제 시험과 동일한 환경으로 100문항을 150분 내에 풀어보세요</p>
-            <span className="pilgi-mode-badge">150분 타이머</span>
+            <p>실제 시험과 동일한 환경으로 100문항을 100분 내에 풀어보세요</p>
+            <span className="pilgi-mode-badge">100분 타이머</span>
           </Link>
 
           <Link to="/pilgi/study" className="pilgi-mode-card">

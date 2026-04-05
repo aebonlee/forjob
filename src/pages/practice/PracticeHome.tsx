@@ -23,7 +23,7 @@ export default function PracticeHome() {
               <h3 className="practice-card-title">필기 CBT</h3>
               <p className="practice-card-desc">5과목 100문항 4지선다 — 실제 시험과 동일한 CBT 환경에서 연습하세요.</p>
               <div className="practice-card-meta">
-                <span className="practice-card-badge"><i className="fa-solid fa-clock" /> 150분</span>
+                <span className="practice-card-badge"><i className="fa-solid fa-clock" /> 100분</span>
                 <span className="practice-card-badge"><i className="fa-solid fa-list-ol" /> 100문항</span>
                 <span className="practice-card-badge"><i className="fa-solid fa-check-double" /> 평균 60점 합격</span>
               </div>

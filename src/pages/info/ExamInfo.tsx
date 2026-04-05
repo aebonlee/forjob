@@ -58,7 +58,7 @@ export default function ExamInfo() {
                 <tr><th>과목 수</th><td>5과목</td></tr>
                 <tr><th>문항 수</th><td>총 100문항 (과목당 20문항)</td></tr>
                 <tr><th>문제 유형</th><td>객관식 4지 택일형</td></tr>
-                <tr><th>시험 시간</th><td><strong>150분</strong> (2시간 30분)</td></tr>
+                <tr><th>시험 시간</th><td><strong>100분</strong> (1시간 40분)</td></tr>
                 <tr><th>합격 기준</th><td>전 과목 평균 <strong>60점</strong> 이상 + 과목당 <strong>40점</strong> 이상</td></tr>
               </tbody>
             </table>

@@ -131,7 +131,7 @@ export default function ExamSelect() {
           </div>
 
           <div className="exam-select-info">
-            <p><i className="fa-solid fa-circle-info" /> 총 100문항 (5과목 x 20문항), 제한시간 150분</p>
+            <p><i className="fa-solid fa-circle-info" /> 총 100문항 (5과목 x 20문항), 제한시간 100분</p>
             <p><i className="fa-solid fa-check" /> 평균 60점 이상 + 과목당 40점 이상 합격</p>
           </div>
 
