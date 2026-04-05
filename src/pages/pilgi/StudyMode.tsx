@@ -6,6 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import { supabase, TABLES } from '../../lib/supabase';
 import { SUBJECTS } from '../../config/site';
+import { loadPilgiQuestions } from '../../data/pilgiLoader';
 
 export default function StudyMode() {
   const [selectedSubject, setSelectedSubject] = useState('all');
@@ -21,15 +22,13 @@ export default function StudyMode() {
   const loadQuestions = useCallback(async () => {
     setLoading(true);
     try {
-      let query = supabase.from(TABLES.QUESTIONS).select('*');
-      if (selectedSubject !== 'all') {
-        const subject = SUBJECTS.find(s => s.code === selectedSubject);
-        if (subject) query = query.eq('subject_id', subject.id);
-      }
-      query = query.order('subject_id').order('question_number').limit(50);
-
-      const { data, error } = await query;
-      if (error) throw error;
+      const subject = selectedSubject !== 'all'
+        ? SUBJECTS.find(s => s.code === selectedSubject)
+        : null;
+      const data = await loadPilgiQuestions({
+        subjectId: subject?.id || null,
+        limit: 50,
+      });
       setQuestions(data || []);
       setCurrentIndex(0);
       setAnswers({});

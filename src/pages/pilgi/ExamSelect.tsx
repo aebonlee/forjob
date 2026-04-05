@@ -1,68 +1,58 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '../../components/SEOHead';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import { supabase, TABLES } from '../../lib/supabase';
+import { loadPilgiQuestions, getAvailableYears, getAvailableSessions } from '../../data/pilgiLoader';
 
 export default function ExamSelect() {
   const [examYear, setExamYear] = useState('random');
   const [examSession, setExamSession] = useState('random');
   const [loading, setLoading] = useState(false);
+  const [years, setYears] = useState<number[]>([]);
+  const [sessions, setSessions] = useState<number[]>([]);
   const navigate = useNavigate();
   const { user } = useAuth();
   const { showToast } = useToast();
 
-  const years = [2024, 2023, 2022, 2021, 2020, 2019];
-  const sessions = [1, 2, 3];
+  useEffect(() => {
+    getAvailableYears().then(setYears);
+  }, []);
+
+  useEffect(() => {
+    const yr = examYear !== 'random' ? parseInt(examYear) : undefined;
+    getAvailableSessions(yr).then(setSessions);
+  }, [examYear]);
 
   const handleStart = async () => {
     setLoading(true);
     try {
-      let query = supabase.from(TABLES.QUESTIONS).select('*');
+      const questions = await loadPilgiQuestions({
+        examYear: examYear !== 'random' ? parseInt(examYear) : null,
+        examSession: examSession !== 'random' ? parseInt(examSession) : null,
+        limit: 100,
+      });
 
-      if (examYear !== 'random') {
-        query = query.eq('exam_year', parseInt(examYear));
-      }
-      if (examSession !== 'random') {
-        query = query.eq('exam_session', parseInt(examSession));
-      }
-
-      query = query.order('subject_id').order('question_number');
-
-      const { data: questions, error } = await query;
-
-      if (error) throw error;
-
-      if (!questions?.length) {
+      if (!questions.length) {
         showToast('해당 조건의 문제가 없습니다. 랜덤으로 시작합니다.', 'info');
-        const { data: allQuestions } = await supabase
-          .from(TABLES.QUESTIONS)
-          .select('*')
-          .order('subject_id')
-          .order('question_number')
-          .limit(100);
-
-        if (!allQuestions?.length) {
+        const allQuestions = await loadPilgiQuestions({ limit: 100 });
+        if (!allQuestions.length) {
           showToast('등록된 문제가 없습니다.', 'error');
           setLoading(false);
           return;
         }
-
-        // Create session
         const session = await createSession(allQuestions, null, null);
         navigate(`/pilgi/exam/${session.id}`, { state: { questions: allQuestions, session } });
         return;
       }
 
-      // Limit to 100 questions
-      const limitedQuestions = questions.slice(0, 100);
       const session = await createSession(
-        limitedQuestions,
+        questions,
         examYear !== 'random' ? parseInt(examYear) : null,
         examSession !== 'random' ? parseInt(examSession) : null,
       );
-      navigate(`/pilgi/exam/${session.id}`, { state: { questions: limitedQuestions, session } });
+      navigate(`/pilgi/exam/${session.id}`, { state: { questions, session } });
     } catch (err: any) {
       console.error(err);
       showToast('시험 시작에 실패했습니다.', 'error');
