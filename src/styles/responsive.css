@@ -6,7 +6,7 @@
 @media (min-width: 1400px) {
     .container { padding: 0 60px; }
     .navbar-inner { padding: 0 60px; }
-    .hero .container { grid-template-columns: 1fr 460px; }
+    .hero .container { grid-template-columns: 1fr 480px; }
 }
 
 /* ===== Desktop (1024px - 1279px) ===== */
@@ -40,7 +40,7 @@
     .navbar-actions { display: none; }
     .mobile-menu-toggle { display: flex; }
 
-    /* Hero — 2열 → 1열 전환 */
+    /* Hero — 2열 → 1열 전환 (stagger 해제) */
     .hero .container {
         grid-template-columns: 1fr;
         gap: 32px;
@@ -48,11 +48,12 @@
     }
     .hero-content {
         align-items: center;
+        transform: none;
     }
     .hero-title { font-size: 40px; }
     .hero-description { margin: 0 auto 36px; }
     .hero-buttons { justify-content: center; }
-    .hero-exam-schedule { max-width: 520px; margin: 0 auto; }
+    .hero-exam-schedule { max-width: 520px; margin: 0 auto; transform: none; }
 
     /* Home Subjects */
     .home-subjects-grid { grid-template-columns: repeat(3, 1fr); }
@@ -663,7 +664,8 @@
 /* ===== Landscape Orientation Fixes ===== */
 @media (max-height: 500px) and (orientation: landscape) {
     .hero { min-height: auto; padding: 80px 0 40px; }
-    .hero-content { padding: calc(var(--nav-height) + 20px) 0 20px; }
+    .hero-content { padding: calc(var(--nav-height) + 20px) 0 20px; transform: none; }
+    .hero-exam-schedule { transform: none; }
     .login-page { padding: 20px; }
     .exam-timer-display { font-size: 18px; }
 }

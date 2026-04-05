@@ -15,18 +15,22 @@
     position: relative;
     z-index: 2;
     display: grid;
-    grid-template-columns: 1fr 420px;
+    grid-template-columns: 1fr 440px;
     align-items: center;
-    gap: 80px;
-    padding-top: calc(var(--nav-height) + 40px);
-    padding-bottom: 60px;
+    gap: 60px;
+    padding-top: calc(var(--nav-height) + 60px);
+    padding-bottom: 80px;
 }
 
 .hero-content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    transform: translateY(-50px);
+    transform: translateY(-60px);
+}
+
+.hero-exam-schedule {
+    transform: translateY(50px);
 }
 
 .hero-badge {
