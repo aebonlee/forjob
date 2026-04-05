@@ -759,37 +759,30 @@ function Level1Content() {
         </div>
         <div className="info-alert info-alert-info" style={{ marginBottom: 20 }}>
           <i className="fa-solid fa-circle-info" />
-          <span>1급은 연 <strong>1회(3회차)</strong>만 시행됩니다.</span>
+          <span>1급은 연 <strong>1회(정기 기사 3회)</strong>만 시행됩니다.</span>
         </div>
         <div className="info-table-wrap">
           <table className="info-table schedule full-schedule">
             <thead>
-              <tr><th>구분</th><th>3회</th></tr>
+              <tr>
+                <th>구분</th>
+                <th>필기원서접수<br /><small>(인터넷, 휴일제외)</small></th>
+                <th>필기시험</th>
+                <th>필기합격<br />(예정자)발표</th>
+                <th>실기원서접수<br /><small>(휴일제외)</small></th>
+                <th>실기시험</th>
+                <th>최종합격자<br />발표일</th>
+              </tr>
             </thead>
             <tbody>
               <tr>
-                <td><span className="info-round-badge register">필기 접수</span></td>
-                <td>7.20 ~ 7.23</td>
-              </tr>
-              <tr>
-                <td><span className="info-round-badge exam">필기 시험</span></td>
-                <td>8.7 ~ 9.1</td>
-              </tr>
-              <tr>
-                <td><span className="info-round-badge announce">필기 발표</span></td>
-                <td>9.9</td>
-              </tr>
-              <tr>
-                <td><span className="info-round-badge register">실기 접수</span></td>
-                <td>9.21 ~ 9.28</td>
-              </tr>
-              <tr>
-                <td><span className="info-round-badge exam silgi">실기 시험</span></td>
-                <td>10.24 ~ 11.13</td>
-              </tr>
-              <tr>
-                <td><span className="info-round-badge announce">최종 발표</span></td>
-                <td>12.18</td>
+                <td><strong>2026년<br />정기 기사 3회</strong></td>
+                <td>2026.07.20<br />~<br />2026.07.23</td>
+                <td>2026.08.07<br />~<br />2026.09.01</td>
+                <td>2026.09.09</td>
+                <td>2026.09.21<br />~<br />2026.09.28</td>
+                <td>2026.10.24<br />~<br />2026.11.13</td>
+                <td>2026.12.18</td>
               </tr>
             </tbody>
           </table>
@@ -799,8 +792,9 @@ function Level1Content() {
           <span>접수는 첫날 <strong>10:00</strong>부터 마지막 날 <strong>18:00</strong>까지 · 수수료: 필기 <strong>19,400원</strong> / 실기 <strong>20,800원</strong></span>
         </div>
         <p className="info-note">
-          * 시�� 접수 및 상��� 일정은 <a href="https://www.q-net.or.kr" target="_blank" rel="noopener noreferrer"><strong>큐넷(Q-Net)</strong></a>에서 ��드시 확인하세요.
-          시험 일정은 종목별, 지역별로 상이할 수 있으며, 접수 일정 전에 공지되는 해당 회별 수험자 안내(Q-net 공지사항)를 참조하세요.
+          * 시험 접수 및 상세 일정은 <a href="https://www.q-net.or.kr" target="_blank" rel="noopener noreferrer"><strong>큐넷(Q-Net)</strong></a>에서 반드시 확인하세요.<br />
+          * 필기시험 합격예정자 및 최종합격자 발표시간은 해당 발표일 09:00입니다.<br />
+          * 시험 일정은 종목별, 지역별로 상이할 수 있으며, 접수 일정 전에 공지되는 해당 회별 수험자 안내(Q-net 공지사항)를 참조하세요.
         </p>
       </section>
 
@@ -808,7 +802,7 @@ function Level1Content() {
       <section className="info-card">
         <div className="info-card-header">
           <span className="info-card-icon stats"><i className="fa-solid fa-chart-column" /></span>
-          <h2>검정���황 (합격률 추이)</h2>
+          <h2>검정현황 (합격률 추이)</h2>
         </div>
         <p className="info-card-text">
           1급은 응시 인원이 적지만, 최근 필기 합격률은 <strong>약 70~83%</strong>, 실기 합격률은 <strong>약 67~72%</strong>로 상승 추세입니다.
@@ -893,7 +887,7 @@ function Level1Content() {
               <div className="info-trend-body">
                 <span className="info-trend-label">여성</span>
                 <span className="info-trend-numbers">접수 845 / 응시 689 / 합격 573</span>
-                <span className="info-trend-rate">합격��� <strong>83.2%</strong></span>
+                <span className="info-trend-rate">합격률 <strong>83.2%</strong></span>
               </div>
             </div>
           </div>
@@ -903,7 +897,7 @@ function Level1Content() {
         </div>
       </section>
 
-      {/* 우대��황 */}
+      {/* 우대현황 */}
       <section className="info-card">
         <div className="info-card-header">
           <span className="info-card-icon benefit"><i className="fa-solid fa-medal" /></span>
@@ -916,30 +910,30 @@ function Level1Content() {
         <div className="info-table-wrap">
           <table className="info-table benefit-table">
             <thead>
-              <tr><th>우�� 법령</th><th>활용 내용</th></tr>
+              <tr><th>우대 법령</th><th>활용 내용</th></tr>
             </thead>
             <tbody>
-              <tr><td>공무원임용시험령 제27조</td><td>경력경��채용시험 등의 응시</td></tr>
-              <tr><td>공무원임용시험령 제31조</td><td>6��� 이하 공무원 채용시험 가산 대상 자격증</td></tr>
-              <tr><td>국가공무원법 제36조의2</td><td>공��원 채용시험 응시 가점</td></tr>
-              <tr><td>교육감소속지방공무원평정��칙 제23조</td><td>5급 이하 공무원, 연구사 및 지도사 가점</td></tr>
-              <tr><td>군무���인사법시행령 제10조</td><td>경력경쟁채용 신규채용 요건</td></tr>
+              <tr><td>공무원임용시험령 제27조</td><td>경력경쟁채용시험 등의 응시</td></tr>
+              <tr><td>공무원임용시험령 제31조</td><td>6급 이하 공무원 채용시험 가산 대상 자격증</td></tr>
+              <tr><td>국가공무원법 제36조의2</td><td>공무원 채용시험 응시 가점</td></tr>
+              <tr><td>교육감소속지방공무원평정규칙 제23조</td><td>5급 이하 공무원, 연구사 및 지도사 가점</td></tr>
+              <tr><td>군무원인사법시행령 제10조</td><td>경력경쟁채용 신규채용 요건</td></tr>
               <tr><td>군무원인사법시행규칙 제18조</td><td>채용시험의 특전</td></tr>
-              <tr><td>군인사법시행규칙 제14조</td><td>부��관 임용 자격</td></tr>
-              <tr><td>근로자직업능력��발법시행령 제24��</td><td>직업능력개발훈련시설의 지정 인력</td></tr>
-              <tr><td>근로자직��능력���발법시행령 ���27조</td><td>직��능력개발훈련교사의 정의</td></tr>
+              <tr><td>군인사법시행규칙 제14조</td><td>부사관 임용 자격</td></tr>
+              <tr><td>근로자직업능력개발법시행령 제24조</td><td>직업능력개발훈련시설의 지정 인력</td></tr>
+              <tr><td>근로자직업능력개발법시행령 제27조</td><td>직업능력개발훈련교사의 정의</td></tr>
               <tr><td>근로자직업능력개발법시행령 제28조</td><td>직업능력개발훈련교사 자격 취득</td></tr>
               <tr><td>근로자직업능력개발법시행령 제44조</td><td>교원 임용 시 자격증 소지자 우대</td></tr>
               <tr><td>기초연구진흥및기술개발지원에관한법률시행규칙 제2조</td><td>연구전담요원의 자격 기준</td></tr>
-              <tr><td>국가기술자격법 제14조</td><td>국가기술자��� 취득자 우대</td></tr>
+              <tr><td>국가기술자격법 제14조</td><td>국가기술자격 취득자 우대</td></tr>
               <tr><td>국가기술자격법시행규칙 제21조</td><td>시험위원의 자격</td></tr>
-              <tr><td>국가기술자격법시행령 제27조</td><td>공공기관 등 채용 시 국가기술자��� 취득자 우대</td></tr>
-              <tr><td>중소기업인력지원특별�� 제28조</td><td>해당 직종 관련 분야 신기술 창업 지원</td></tr>
+              <tr><td>국가기술자격법시행령 제27조</td><td>공공기관 등 채용 시 국가기술자격 취득자 우대</td></tr>
+              <tr><td>중소기업인력지원특별법 제28조</td><td>해당 직종 관련 분야 신기술 창업 지원</td></tr>
               <tr><td>지방공무원수당등에관한규정 제14조</td><td>특수업무수당 지급</td></tr>
               <tr><td>지방공무원임용령 제17조</td><td>경력경쟁시험 등의 임용 요건</td></tr>
-              <tr><td>지방공무원임용령 제55조의3</td><td>6급 이하 공��원 신��임용 시 필기시�� 점수 가산</td></tr>
-              <tr><td>지방공무원평���규칙 제23조</td><td>5급 이하 공��원, ���구사 및 지도사 가점</td></tr>
-              <tr><td>국회인사규칙 제20조</td><td>동종 직무 자격증 소��자 경력경쟁채용</td></tr>
+              <tr><td>지방공무원임용령 제55조의3</td><td>6급 이하 공무원 신규임용 시 필기시험 점수 가산</td></tr>
+              <tr><td>지방공무원평정규칙 제23조</td><td>5급 이하 공무원, 연구사 및 지도사 가점</td></tr>
+              <tr><td>국회인사규칙 제20조</td><td>동종 직무 자격증 소지자 경력경쟁채용</td></tr>
               <tr><td>비상대비자원관리법 제2조</td><td>비상대비 자원의 인력자원 범위</td></tr>
             </tbody>
           </table>
