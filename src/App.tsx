@@ -34,6 +34,7 @@ import ExamInfo from './pages/info/ExamInfo';
 
 import LearnHome from './pages/learn/LearnHome';
 import SubjectStudy from './pages/learn/SubjectStudy';
+import StudySummary from './pages/learn/StudySummary';
 
 import PracticeHome from './pages/practice/PracticeHome';
 
@@ -48,6 +49,7 @@ function AppLayout() {
 
           <Route path="/learn" element={<LearnHome />} />
           <Route path="/learn/:subjectCode" element={<SubjectStudy />} />
+          <Route path="/summary" element={<StudySummary />} />
 
           <Route path="/practice" element={<PracticeHome />} />
 

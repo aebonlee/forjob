@@ -47,7 +47,7 @@ export const NAV_ITEMS = [
       { path: '/learn/silgi', label: '실기 실무' },
     ]
   },
-  { path: '/learn', label: '학습요약', icon: 'fa-solid fa-graduation-cap' },
+  { path: '/summary', label: '학습요약', icon: 'fa-solid fa-graduation-cap' },
   { path: '/practice', label: '문제풀기', icon: 'fa-solid fa-pen-to-square',
     children: [
       { path: '/pilgi', label: '필기 CBT' },
