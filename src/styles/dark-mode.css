@@ -55,6 +55,51 @@ html[data-theme="dark"] .hero {
     background: var(--hero-bg-dark);
 }
 
+/* ===== Pilgi Home Dark ===== */
+html[data-theme="dark"] .pilgi-mode-card {
+    background: var(--bg-white);
+    border-color: var(--border-light);
+}
+html[data-theme="dark"] .pilgi-mode-card:hover {
+    border-color: var(--primary-blue-light);
+}
+html[data-theme="dark"] .pilgi-mode-card h3 {
+    color: #F1F5F9;
+}
+html[data-theme="dark"] .pilgi-mode-card p {
+    color: var(--text-secondary);
+}
+html[data-theme="dark"] .pilgi-mode-icon.exam {
+    background: rgba(61, 109, 181, 0.15);
+    color: var(--primary-blue-light);
+}
+html[data-theme="dark"] .pilgi-mode-icon.study {
+    background: rgba(16, 185, 129, 0.12);
+    color: #6EE7B7;
+}
+html[data-theme="dark"] .pilgi-mode-card:hover .pilgi-mode-icon.exam {
+    background: var(--primary-blue-light);
+    color: #FFFFFF;
+}
+html[data-theme="dark"] .pilgi-mode-card:hover .pilgi-mode-icon.study {
+    background: #10B981;
+    color: #FFFFFF;
+}
+html[data-theme="dark"] .pilgi-mode-badge {
+    background: var(--bg-light-gray);
+    color: var(--primary-blue-light);
+}
+html[data-theme="dark"] .pilgi-subject-card {
+    background: var(--bg-white);
+    border-color: var(--border-light);
+}
+html[data-theme="dark"] .pilgi-subject-card h4 {
+    color: #F1F5F9;
+}
+html[data-theme="dark"] .pilgi-subject-card p {
+    color: var(--text-light);
+}
+
 /* ===== Cards Dark Mode ===== */
 html[data-theme="dark"] .card,
 html[data-theme="dark"] .home-feature-card,

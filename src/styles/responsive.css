@@ -63,6 +63,9 @@
     /* Pass Rate */
     .pass-rate-grid { grid-template-columns: 1fr; }
 
+    /* Pilgi Home */
+    .pilgi-subjects-grid { grid-template-columns: repeat(3, 1fr); }
+
     /* Exam Container */
     .exam-container {
         grid-template-columns: 1fr;
@@ -135,6 +138,14 @@
     .hero-buttons .btn { width: 100%; }
     .hero-stats { flex-direction: column; gap: 16px; text-align: center; }
     .scroll-indicator { display: none; }
+
+    /* Pilgi Home */
+    .pilgi-modes { grid-template-columns: 1fr; gap: 16px; }
+    .pilgi-mode-card { padding: 32px 24px; }
+    .pilgi-mode-icon { width: 64px; height: 64px; font-size: 28px; }
+    .pilgi-subjects-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .pilgi-subject-card { padding: 20px 16px; }
+    .pilgi-subject-icon { width: 48px; height: 48px; font-size: 20px; }
 
     /* Home Features */
     .home-features-grid { grid-template-columns: 1fr; gap: 20px; }
@@ -229,6 +240,13 @@
 
     /* Navbar */
     .navbar-logo { font-size: 18px; gap: 8px; }
+
+    /* Pilgi Home */
+    .pilgi-subjects-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .pilgi-subject-card { padding: 16px 12px; }
+    .pilgi-subject-icon { width: 44px; height: 44px; font-size: 18px; margin-bottom: 10px; }
+    .pilgi-subject-card h4 { font-size: 13px; }
+    .pilgi-subject-card p { font-size: 12px; }
 
     /* Hero */
     .hero-content { padding: calc(var(--nav-height) + 24px) 0 24px; }
