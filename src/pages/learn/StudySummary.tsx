@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import SEOHead from '../../components/SEOHead';
 import {
@@ -8,10 +8,14 @@ import {
   getPilgiFreqCounts,
 } from '../../data/pilgiFrequent';
 
-function FrequentCard({ topic, isOpen, onToggle }) {
+function FrequentCard({ topic, isOpen, onToggle, cardRef }) {
   const cat = PILGI_FREQ_CATEGORIES.find((c) => c.id === topic.category);
   return (
-    <div className={`sq-card ${isOpen ? 'sq-card--open' : ''}`}>
+    <div
+      className={`sq-card ${isOpen ? 'sq-card--open' : ''}`}
+      ref={cardRef}
+      id={`topic-${topic.num}`}
+    >
       <button className="sq-card-header" onClick={onToggle} type="button">
         <div className="sq-card-num">Q{topic.num}</div>
         <div className="sq-card-title-area">
@@ -57,8 +61,19 @@ export default function StudySummary() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [openTopics, setOpenTopics] = useState<Set<number>>(new Set());
   const [searchTerm, setSearchTerm] = useState('');
+  const [expandedSidebarCats, setExpandedSidebarCats] = useState<Set<string>>(new Set());
+  const topicRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
   const counts = useMemo(() => getPilgiFreqCounts(), []);
+
+  const topicsByCategory = useMemo(() => {
+    const map: Record<string, typeof PILGI_FREQUENT> = {};
+    for (const cat of PILGI_FREQ_CATEGORIES) {
+      if (cat.id === 'all') continue;
+      map[cat.id] = PILGI_FREQUENT.filter((t) => t.category === cat.id);
+    }
+    return map;
+  }, []);
 
   const filtered = useMemo(() => {
     let list = getPilgiFreqByCategory(activeCategory);
@@ -90,6 +105,37 @@ export default function StudySummary() {
     setOpenTopics(new Set());
   };
 
+  const toggleSidebarCat = (catId: string) => {
+    setExpandedSidebarCats((prev) => {
+      const next = new Set(prev);
+      if (next.has(catId)) next.delete(catId);
+      else next.add(catId);
+      return next;
+    });
+  };
+
+  const scrollToTopic = (num: number) => {
+    // Open the topic if not already open
+    setOpenTopics((prev) => {
+      const next = new Set(prev);
+      next.add(num);
+      return next;
+    });
+    // Scroll to card
+    setTimeout(() => {
+      const el = topicRefs.current[num];
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
+  };
+
+  const selectCategoryFromSidebar = (catId: string) => {
+    setActiveCategory(catId);
+    setOpenTopics(new Set());
+    setSearchTerm('');
+  };
+
   return (
     <>
       <SEOHead
@@ -109,91 +155,174 @@ export default function StudySummary() {
       </div>
 
       <div className="container silgi-exam-page">
-        {/* Category Filter */}
-        <div className="freq-filter">
-          {PILGI_FREQ_CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              className={`freq-filter-btn ${activeCategory === cat.id ? 'active' : ''}`}
-              onClick={() => {
-                setActiveCategory(cat.id);
-                setOpenTopics(new Set());
-              }}
-              type="button"
-              style={
-                activeCategory === cat.id
-                  ? { background: cat.color, borderColor: cat.color, color: '#fff' }
-                  : undefined
-              }
-            >
-              <i className={cat.icon} />
-              <span>{cat.label}</span>
-              <span className="freq-filter-count">{counts[cat.id]}</span>
-            </button>
-          ))}
-        </div>
+        <div className="summary-layout">
+          {/* Desktop Sidebar */}
+          <aside className="summary-sidebar">
+            <div className="summary-sidebar-inner">
+              <div className="summary-sidebar-title">
+                <i className="fa-solid fa-bars-staggered" />
+                <span>과목별 분류</span>
+              </div>
 
-        {/* Search */}
-        <div className="freq-search">
-          <i className="fa-solid fa-search" />
-          <input
-            type="text"
-            placeholder="주제 검색 (제목, 키워드)"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          {searchTerm && (
-            <button
-              className="freq-search-clear"
-              onClick={() => setSearchTerm('')}
-              type="button"
-            >
-              <i className="fa-solid fa-xmark" />
-            </button>
-          )}
-        </div>
+              {/* All topics button */}
+              <button
+                className={`summary-sidebar-all ${activeCategory === 'all' ? 'active' : ''}`}
+                onClick={() => selectCategoryFromSidebar('all')}
+                type="button"
+              >
+                <i className="fa-solid fa-list" />
+                <span>전체 보기</span>
+                <span className="summary-sidebar-count">{counts.all}</span>
+              </button>
 
-        {/* Controls */}
-        <div className="sq-controls">
-          <button className="sq-control-btn" onClick={expandAll} type="button">
-            <i className="fa-solid fa-angles-down" /> 전체 펼치기
-          </button>
-          <button className="sq-control-btn" onClick={collapseAll} type="button">
-            <i className="fa-solid fa-angles-up" /> 전체 접기
-          </button>
-          <span className="sq-control-count">
-            {filtered.length}개 주제{' '}
-            {searchTerm && `(검색: "${searchTerm}")`}
-          </span>
-        </div>
+              {/* Category dropdowns */}
+              <nav className="summary-sidebar-nav">
+                {PILGI_FREQ_CATEGORIES.filter((c) => c.id !== 'all').map((cat) => {
+                  const isExpanded = expandedSidebarCats.has(cat.id);
+                  const isActive = activeCategory === cat.id;
+                  const topics = topicsByCategory[cat.id] || [];
 
-        {/* Topic List */}
-        <div className="sq-list">
-          {filtered.length > 0 ? (
-            filtered.map((t) => (
-              <FrequentCard
-                key={t.num}
-                topic={t}
-                isOpen={openTopics.has(t.num)}
-                onToggle={() => toggleTopic(t.num)}
-              />
-            ))
-          ) : (
-            <div className="freq-empty">
-              <i className="fa-solid fa-search" />
-              <p>검색 결과가 없습니다.</p>
+                  return (
+                    <div key={cat.id} className="summary-sidebar-group">
+                      <button
+                        className={`summary-sidebar-cat ${isActive ? 'active' : ''}`}
+                        onClick={() => toggleSidebarCat(cat.id)}
+                        type="button"
+                      >
+                        <span
+                          className="summary-sidebar-dot"
+                          style={{ background: cat.color }}
+                        />
+                        <span className="summary-sidebar-cat-label">{cat.label}</span>
+                        <span className="summary-sidebar-count">{counts[cat.id]}</span>
+                        <i className={`fa-solid fa-chevron-${isExpanded ? 'up' : 'down'} summary-sidebar-chevron`} />
+                      </button>
+
+                      {isExpanded && (
+                        <ul className="summary-sidebar-topics">
+                          {/* Category filter shortcut */}
+                          <li>
+                            <button
+                              className={`summary-sidebar-topic-filter ${isActive ? 'active' : ''}`}
+                              onClick={() => selectCategoryFromSidebar(cat.id)}
+                              type="button"
+                              style={isActive ? { color: cat.color } : undefined}
+                            >
+                              <i className="fa-solid fa-filter" />
+                              이 과목만 보기
+                            </button>
+                          </li>
+                          {topics.map((t) => (
+                            <li key={t.num}>
+                              <button
+                                className={`summary-sidebar-topic ${openTopics.has(t.num) ? 'active' : ''}`}
+                                onClick={() => scrollToTopic(t.num)}
+                                type="button"
+                              >
+                                <span className="summary-sidebar-topic-num">Q{t.num}</span>
+                                <span className="summary-sidebar-topic-title">{t.title}</span>
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  );
+                })}
+              </nav>
             </div>
-          )}
-        </div>
+          </aside>
 
-        {/* Bottom Navigation */}
-        <div className="sq-bottom-nav">
-          <Link to="/learn" className="btn btn-secondary">
-            <i className="fa-solid fa-arrow-left" /> 과목별 학습
-          </Link>
-          <Link to="/pilgi" className="btn btn-primary">
-            <i className="fa-solid fa-pen-to-square" /> 필기 CBT
-          </Link>
+          {/* Main Content */}
+          <div className="summary-main">
+            {/* Category Filter (mobile + desktop inline) */}
+            <div className="freq-filter summary-mobile-filter">
+              {PILGI_FREQ_CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  className={`freq-filter-btn ${activeCategory === cat.id ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveCategory(cat.id);
+                    setOpenTopics(new Set());
+                  }}
+                  type="button"
+                  style={
+                    activeCategory === cat.id
+                      ? { background: cat.color, borderColor: cat.color, color: '#fff' }
+                      : undefined
+                  }
+                >
+                  <i className={cat.icon} />
+                  <span>{cat.label}</span>
+                  <span className="freq-filter-count">{counts[cat.id]}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Search */}
+            <div className="freq-search">
+              <i className="fa-solid fa-search" />
+              <input
+                type="text"
+                placeholder="주제 검색 (제목, 키워드)"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              {searchTerm && (
+                <button
+                  className="freq-search-clear"
+                  onClick={() => setSearchTerm('')}
+                  type="button"
+                >
+                  <i className="fa-solid fa-xmark" />
+                </button>
+              )}
+            </div>
+
+            {/* Controls */}
+            <div className="sq-controls">
+              <button className="sq-control-btn" onClick={expandAll} type="button">
+                <i className="fa-solid fa-angles-down" /> 전체 펼치기
+              </button>
+              <button className="sq-control-btn" onClick={collapseAll} type="button">
+                <i className="fa-solid fa-angles-up" /> 전체 접기
+              </button>
+              <span className="sq-control-count">
+                {filtered.length}개 주제{' '}
+                {searchTerm && `(검색: "${searchTerm}")`}
+              </span>
+            </div>
+
+            {/* Topic List */}
+            <div className="sq-list">
+              {filtered.length > 0 ? (
+                filtered.map((t) => (
+                  <FrequentCard
+                    key={t.num}
+                    topic={t}
+                    isOpen={openTopics.has(t.num)}
+                    onToggle={() => toggleTopic(t.num)}
+                    cardRef={(el: HTMLDivElement | null) => { topicRefs.current[t.num] = el; }}
+                  />
+                ))
+              ) : (
+                <div className="freq-empty">
+                  <i className="fa-solid fa-search" />
+                  <p>검색 결과가 없습니다.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Bottom Navigation */}
+            <div className="sq-bottom-nav">
+              <Link to="/learn" className="btn btn-secondary">
+                <i className="fa-solid fa-arrow-left" /> 과목별 학습
+              </Link>
+              <Link to="/pilgi" className="btn btn-primary">
+                <i className="fa-solid fa-pen-to-square" /> 필기 CBT
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </>

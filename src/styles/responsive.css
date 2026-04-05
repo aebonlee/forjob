@@ -21,6 +21,8 @@
     .practice-container { grid-template-columns: 1fr 340px; }
     .display-layout-toggle { display: none; }
     .exam-questions-dual { grid-template-columns: 1fr; }
+    .summary-layout { grid-template-columns: 220px 1fr; gap: 20px; }
+    .summary-sidebar-topic-title { -webkit-line-clamp: 1; }
 }
 
 /* ===== Tablet Landscape (768px - 1023px) ===== */
@@ -98,6 +100,11 @@
         position: relative;
         top: auto;
     }
+
+    /* Summary Sidebar → collapse on tablet/mobile */
+    .summary-layout { grid-template-columns: 1fr; }
+    .summary-sidebar { display: none; }
+    .summary-mobile-filter { display: flex !important; }
 
     /* Key Terms */
     .key-terms-grid { grid-template-columns: repeat(2, 1fr); }

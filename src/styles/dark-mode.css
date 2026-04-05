@@ -1274,6 +1274,35 @@ html[data-theme="dark"] .sq-control-btn {
 html[data-theme="dark"] .sq-back-link {
     color: rgba(255, 255, 255, 0.7);
 }
+html[data-theme="dark"] .summary-sidebar-inner {
+    background: var(--bg-white);
+    border-color: var(--border-light);
+}
+html[data-theme="dark"] .summary-sidebar-title {
+    color: #F1F5F9;
+    border-bottom-color: var(--border-light);
+}
+html[data-theme="dark"] .summary-sidebar-all:hover,
+html[data-theme="dark"] .summary-sidebar-cat:hover {
+    background: var(--bg-light-gray);
+}
+html[data-theme="dark"] .summary-sidebar-all.active {
+    background: rgba(61, 109, 181, 0.12);
+}
+html[data-theme="dark"] .summary-sidebar-count {
+    background: var(--bg-light-gray);
+    color: var(--text-light);
+}
+html[data-theme="dark"] .summary-sidebar-group {
+    border-bottom-color: var(--border-light);
+}
+html[data-theme="dark"] .summary-sidebar-topic:hover,
+html[data-theme="dark"] .summary-sidebar-topic-filter:hover {
+    background: var(--bg-light-gray);
+}
+html[data-theme="dark"] .summary-sidebar-inner::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+}
 
 /* ===== Focus Visible Dark ===== */
 html[data-theme="dark"] :focus-visible {
