@@ -340,6 +340,7 @@
     padding: var(--section-padding) 0;
     background: var(--hero-bg);
     text-align: center;
+    margin-bottom: -80px; /* footer margin-top 상쇄 → 빈 흰배경 제거 */
 }
 .home-cta-content {
     max-width: 640px;

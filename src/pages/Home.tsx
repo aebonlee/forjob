@@ -368,37 +368,39 @@ function LandingHome() {
                 <i className="fa-solid fa-circle-info" /> 시험 안내
               </Link>
             </div>
-            {allEvents.length > 0 && (
-              <div className="hero-exam-schedule">
-                <div className="hero-schedule-title">
-                  <i className="fa-solid fa-calendar-check" /> 2026 시험 일정
-                </div>
-                <div className="hero-schedule-cards">
-                  {allEvents.slice(0, 3).map((evt, idx) => {
-                    const typeClass =
-                      evt.type === '필기시험' || evt.type === '실기시험' ? 'exam'
-                      : evt.type === '필기접수' || evt.type === '실기접수' ? 'register'
-                      : 'announce';
-                    const typeIcon =
-                      typeClass === 'exam' ? 'fa-solid fa-pen-to-square'
-                      : typeClass === 'register' ? 'fa-solid fa-clipboard-list'
-                      : 'fa-solid fa-bullhorn';
-                    const ddayText = evt.days < 0 ? '진행중' : evt.days === 0 ? 'D-Day' : `D-${evt.days}`;
-                    return (
-                      <div key={idx} className={`hero-schedule-card ${typeClass}${idx === 0 ? ' nearest' : ''}`}>
-                        <span className={`hero-schedule-type ${typeClass}`}>
-                          <i className={typeIcon} /> {evt.type}
-                        </span>
-                        <span className="hero-schedule-label">{evt.label}</span>
-                        <span className="hero-schedule-date">{evt.dateStr}</span>
-                        <span className={`hero-schedule-dday ${typeClass}`}>{ddayText}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
+
+          {/* 시험 일정 — hero-content 밖, container 안 (전폭 사용) */}
+          {allEvents.length > 0 && (
+            <div className="hero-exam-schedule">
+              <div className="hero-schedule-title">
+                <i className="fa-solid fa-calendar-check" /> 2026 시험 일정
+              </div>
+              <div className="hero-schedule-cards">
+                {allEvents.slice(0, 3).map((evt, idx) => {
+                  const typeClass =
+                    evt.type === '필기시험' || evt.type === '실기시험' ? 'exam'
+                    : evt.type === '필기접수' || evt.type === '실기접수' ? 'register'
+                    : 'announce';
+                  const typeIcon =
+                    typeClass === 'exam' ? 'fa-solid fa-pen-to-square'
+                    : typeClass === 'register' ? 'fa-solid fa-clipboard-list'
+                    : 'fa-solid fa-bullhorn';
+                  const ddayText = evt.days < 0 ? '진행중' : evt.days === 0 ? 'D-Day' : `D-${evt.days}`;
+                  return (
+                    <div key={idx} className={`hero-schedule-card ${typeClass}${idx === 0 ? ' nearest' : ''}`}>
+                      <span className={`hero-schedule-type ${typeClass}`}>
+                        <i className={typeIcon} /> {evt.type}
+                      </span>
+                      <span className="hero-schedule-label">{evt.label}</span>
+                      <span className="hero-schedule-date">{evt.dateStr}</span>
+                      <span className={`hero-schedule-dday ${typeClass}`}>{ddayText}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
         <div className="scroll-indicator">
           <div className="mouse"><div className="wheel" /></div>

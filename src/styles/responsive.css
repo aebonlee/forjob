@@ -47,7 +47,7 @@
     .hero-title { font-size: 40px; }
     .hero-description { margin: 0 auto 36px; }
     .hero-buttons { justify-content: center; }
-    .hero-exam-schedule { max-width: 600px; margin-left: auto; margin-right: auto; }
+    .hero-exam-schedule { margin-left: auto; margin-right: auto; }
 
     /* Home Subjects */
     .home-subjects-grid { grid-template-columns: repeat(3, 1fr); }
@@ -159,11 +159,11 @@
     .hero-description { font-size: 15px; }
     .hero-buttons { flex-direction: column; width: 100%; }
     .hero-buttons .btn { width: 100%; }
-    .hero-schedule-cards { grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-    .hero-schedule-card { padding: 16px 12px; gap: 8px; }
-    .hero-schedule-label { font-size: 12px; }
-    .hero-schedule-date { font-size: 11px; }
-    .hero-schedule-dday { font-size: 15px; }
+    .hero-schedule-cards { gap: 14px; }
+    .hero-schedule-card { padding: 24px 16px; gap: 10px; }
+    .hero-schedule-label { font-size: 14px; }
+    .hero-schedule-date { font-size: 12px; }
+    .hero-schedule-dday { font-size: 22px; }
     .scroll-indicator { display: none; }
 
     /* Pilgi Home */
@@ -326,10 +326,15 @@
     .hero-title { font-size: 28px; }
     .hero-description { font-size: 14px; margin-bottom: 28px; }
     .hero-badge { font-size: 12px; padding: 6px 16px; }
-    .hero-schedule-cards { grid-template-columns: 1fr; gap: 10px; }
-    .hero-schedule-card { flex-direction: row; align-items: center; padding: 14px 16px; gap: 12px; text-align: left; }
-    .hero-schedule-dday { font-size: 15px; margin-top: 0; margin-left: auto; }
-    .hero-schedule-card.nearest .hero-schedule-dday { font-size: 16px; }
+    .hero-schedule-cards { grid-template-columns: 1fr; gap: 12px; }
+    .hero-schedule-card { flex-direction: row; align-items: center; padding: 16px 20px; gap: 14px; text-align: left; border-radius: 14px; }
+    .hero-schedule-card { border-top: none; border-left: 3px solid transparent; }
+    .hero-schedule-card.exam { border-left-color: #60A5FA; }
+    .hero-schedule-card.register { border-left-color: #34D399; }
+    .hero-schedule-card.announce { border-left-color: #A78BFA; }
+    .hero-schedule-card.nearest { border-left-color: #FBBF24; }
+    .hero-schedule-dday { font-size: 18px; margin-top: 0; margin-left: auto; }
+    .hero-schedule-card.nearest .hero-schedule-dday { font-size: 20px; }
 
     /* Home Overview */
     .home-overview-grid { grid-template-columns: 1fr; }
