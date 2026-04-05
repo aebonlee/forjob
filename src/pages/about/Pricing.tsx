@@ -41,7 +41,7 @@ export default function Pricing() {
       <div className="about-hero">
         <div className="container">
           <h1><i className="fa-solid fa-tags" /> 요금제</h1>
-          <p>합리적인 가격으로 직업상담사 2급 시험을 준비하세요</p>
+          <p>시험 횟차에 맞춰 합리적인 가격으로 준비하세요</p>
         </div>
       </div>
 
@@ -50,10 +50,10 @@ export default function Pricing() {
           {PLANS.map(plan => (
             <div key={plan.id} className={`pricing-card${plan.recommended ? ' pricing-card--recommended' : ''}`}>
               <h3>{plan.label}</h3>
-              <p className="pricing-period">{plan.days ? `${plan.days}일간 이용` : '기간 제한 없음'}</p>
+              <p className="pricing-period">{(plan as any).desc || `${Math.round((plan.days || 0) / 30)}개월간 이용`}</p>
               <div className="pricing-price">{formatPrice(plan.price)}원</div>
               <p className="pricing-price-sub">
-                {plan.days ? `일 ${Math.round(plan.price / plan.days).toLocaleString()}원` : '한 번 결제로 평생'}
+                월 {Math.round(plan.price / Math.round((plan.days || 30) / 30)).toLocaleString()}원
               </p>
               <ul className="pricing-features">
                 {PLAN_FEATURES.map((f, i) => (
@@ -97,7 +97,7 @@ export default function Pricing() {
           </div>
           <div className="faq-item">
             <h4><i className="fa-solid fa-q" /> 이용 기간은 언제부터 시작되나요?</h4>
-            <p>결제 완료 시점부터 시작됩니다. 평생 이용권은 기한 제한이 없습니다.</p>
+            <p>결제 완료 시점부터 시작됩니다. 시험 회차에 맞춰 3개월/6개월/12개월 중 선택하세요.</p>
           </div>
           <div className="faq-item">
             <h4><i className="fa-solid fa-q" /> 환불 규정은 어떻게 되나요?</h4>

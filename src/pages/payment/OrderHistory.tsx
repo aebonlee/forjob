@@ -58,10 +58,8 @@ function OrderHistoryContent() {
           <div className="order-list">
             {orders.map(order => {
               const status = STATUS_LABELS[order.payment_status] || { text: order.payment_status, cls: '' };
-              const isActive = order.payment_status === 'paid' && (
-                order.plan_type === 'lifetime' ||
-                (order.expires_at && new Date(order.expires_at) > new Date())
-              );
+              const isActive = order.payment_status === 'paid' &&
+                order.expires_at && new Date(order.expires_at) > new Date();
 
               return (
                 <div key={order.id} className="order-card">
@@ -75,6 +73,9 @@ function OrderHistoryContent() {
                   <div className="order-card-body">
                     <div className="order-plan">
                       <strong>
+                        {order.plan_type === '3month' && '3개월 이용권'}
+                        {order.plan_type === '6month' && '6개월 이용권'}
+                        {order.plan_type === '12month' && '12개월 이용권'}
                         {order.plan_type === '30day' && '30일 이용권'}
                         {order.plan_type === '90day' && '90일 이용권'}
                         {order.plan_type === 'lifetime' && '평생 이용권'}
@@ -89,7 +90,8 @@ function OrderHistoryContent() {
                       {isActive && ` (${Math.ceil((new Date(order.expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24))}일 남음)`}
                     </div>
                   )}
-                  {order.plan_type === 'lifetime' && order.payment_status === 'paid' && (
+                  {/* 기존 평생 이용권 호환 */}
+                  {order.plan_type === 'lifetime' && order.payment_status === 'paid' && !order.expires_at && (
                     <div className="order-card-footer">기간 제한 없음 (평생)</div>
                   )}
                   {order.cancel_reason && (

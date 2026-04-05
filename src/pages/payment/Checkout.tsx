@@ -123,7 +123,7 @@ function CheckoutContent() {
                   <div key={plan.id} className={`checkout-plan-card${inCart ? ' selected' : ''}${plan.recommended ? ' recommended' : ''}`}>
                     <div className="checkout-plan-info">
                       <h3>{plan.label}</h3>
-                      <p>{plan.days ? `${plan.days}일간 이용` : '기간 제한 없음'}</p>
+                      <p>{(plan as any).desc || `${Math.round((plan.days || 0) / 30)}개월간 이용`}</p>
                     </div>
                     <div className="checkout-plan-price">{plan.price.toLocaleString()}원</div>
                     {inCart ? (

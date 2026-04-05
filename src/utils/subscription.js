@@ -23,12 +23,6 @@ export async function checkSubscription(userId) {
     return { hasAccess: false, subscription: null, expiresAt: null };
   }
 
-  // 평생 이용권 확인
-  const lifetime = data.find(o => o.plan_type === 'lifetime');
-  if (lifetime) {
-    return { hasAccess: true, subscription: lifetime, expiresAt: null };
-  }
-
   // 기간제 이용권 확인 (가장 늦게 만료되는 것)
   const now = new Date();
   const active = data

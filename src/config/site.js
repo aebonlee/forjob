@@ -96,7 +96,7 @@ export const NAV_ITEMS = [
 ];
 
 export const PLANS = [
-  { id: '30day', label: '30일 이용권', price: 9900, days: 30 },
-  { id: '90day', label: '90일 이용권', price: 19900, days: 90, recommended: true },
-  { id: 'lifetime', label: '평생 이용권', price: 39900, days: null },
+  { id: '3month', label: '3개월 이용권', price: 9900, days: 90, desc: '1회차 시험 준비' },
+  { id: '6month', label: '6개월 이용권', price: 19900, days: 180, recommended: true, desc: '2회차 시험 준비' },
+  { id: '12month', label: '12개월 이용권', price: 29900, days: 365, desc: '연간 전 회차 대비' },
 ];
