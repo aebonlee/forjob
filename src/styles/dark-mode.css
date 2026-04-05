@@ -1136,6 +1136,9 @@ html[data-theme="dark"] .info-table.schedule th {
 html[data-theme="dark"] .info-table.schedule tr:hover td {
     background: var(--bg-light-gray);
 }
+html[data-theme="dark"] .info-schedule-extra {
+    color: #FBBF24;
+}
 html[data-theme="dark"] .info-round-badge {
     background: rgba(61, 109, 181, 0.15);
     color: var(--primary-blue-light);

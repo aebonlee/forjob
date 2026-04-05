@@ -333,44 +333,43 @@ function Level2Content({ user }: { user: any }) {
         <div className="info-table-wrap">
           <table className="info-table schedule full-schedule">
             <thead>
-              <tr><th>구분</th><th>1회</th><th>2회</th><th>3회</th></tr>
+              <tr>
+                <th>구분</th>
+                <th>필기원서접수<br /><small>(인터넷, 휴일제외)</small></th>
+                <th>필기시험</th>
+                <th>필기합격<br />(예정자)발표</th>
+                <th>실기원서접수<br /><small>(휴일제외)</small></th>
+                <th>실기시험</th>
+                <th>최종합격자<br />발표일</th>
+              </tr>
             </thead>
             <tbody>
               <tr>
-                <td><span className="info-round-badge register">필기 접수</span></td>
-                <td>1.12 ~ 1.15</td>
-                <td>4.20 ~ 4.23</td>
-                <td>7.20 ~ 7.23</td>
+                <td><strong>2026년<br />정기 기사 1회</strong></td>
+                <td>2026.01.12<br />~<br />2026.01.15<br /><small className="info-schedule-extra">[빈자리접수:<br />2026.01.24~01.25]</small></td>
+                <td>2026.01.30<br />~<br />2026.03.03</td>
+                <td>2026.03.11</td>
+                <td>2026.03.23<br />~<br />2026.03.26<br /><small className="info-schedule-extra">[빈자리접수:<br />2026.04.12~04.13]</small></td>
+                <td>2026.04.18<br />~<br />2026.05.06</td>
+                <td>2026.06.12</td>
               </tr>
               <tr>
-                <td><span className="info-round-badge exam">필기 시험</span></td>
-                <td>1.30 ~ 3.3</td>
-                <td>5.9 ~ 5.29</td>
-                <td>8.7 ~ 9.1</td>
+                <td><strong>2026년<br />정기 기사 2회</strong></td>
+                <td>2026.04.20<br />~<br />2026.04.23<br /><small className="info-schedule-extra">[빈자리접수:<br />2026.05.03~05.04]</small></td>
+                <td>2026.05.09<br />~<br />2026.05.29</td>
+                <td>2026.06.10</td>
+                <td>2026.06.22<br />~<br />2026.06.25</td>
+                <td>2026.07.18<br />~<br />2026.08.05</td>
+                <td>2026.09.11</td>
               </tr>
               <tr>
-                <td><span className="info-round-badge announce">필기 발표</span></td>
-                <td>3.11</td>
-                <td>6.10</td>
-                <td>9.9</td>
-              </tr>
-              <tr>
-                <td><span className="info-round-badge register">실기 접수</span></td>
-                <td>3.23 ~ 3.26</td>
-                <td>6.22 ~ 6.25</td>
-                <td>9.21 ~ 9.28</td>
-              </tr>
-              <tr>
-                <td><span className="info-round-badge exam silgi">실기 시험</span></td>
-                <td>4.18 ~ 5.6</td>
-                <td>7.18 ~ 8.5</td>
-                <td>10.24 ~ 11.13</td>
-              </tr>
-              <tr>
-                <td><span className="info-round-badge announce">최종 발표</span></td>
-                <td>6.12</td>
-                <td>9.11</td>
-                <td>12.18</td>
+                <td><strong>2026년<br />정기 기사 3회</strong></td>
+                <td>2026.07.20<br />~<br />2026.07.23</td>
+                <td>2026.08.07<br />~<br />2026.09.01</td>
+                <td>2026.09.09</td>
+                <td>2026.09.21<br />~<br />2026.09.28</td>
+                <td>2026.10.24<br />~<br />2026.11.13</td>
+                <td>2026.12.18</td>
               </tr>
             </tbody>
           </table>
@@ -380,8 +379,9 @@ function Level2Content({ user }: { user: any }) {
           <span>접수는 첫날 <strong>10:00</strong>부터 마지막 날 <strong>18:00</strong>까지 · 수수료: 필기 <strong>19,400원</strong> / 실기 <strong>20,800원</strong></span>
         </div>
         <p className="info-note">
-          * 시험 접수 및 상세 일정은 <a href="https://www.q-net.or.kr" target="_blank" rel="noopener noreferrer"><strong>큐넷(Q-Net)</strong></a>에서 반드시 확인하세요.
-          공단 사정에 따라 변경될 수 있으므로 정기적으로 체크하시기 바랍니다.
+          * 시험 접수 및 상세 일정은 <a href="https://www.q-net.or.kr" target="_blank" rel="noopener noreferrer"><strong>큐넷(Q-Net)</strong></a>에서 반드시 확인하세요.<br />
+          * 필기시험 합격예정자 및 최종합격자 발표시간은 해당 발표일 09:00입니다.<br />
+          * 시험 일정은 종목별, 지역별로 상이할 수 있으며, 접수 일정 전에 공지되는 해당 회별 수험자 안내(Q-net 공지사항)를 참조하세요.
         </p>
       </section>
 
