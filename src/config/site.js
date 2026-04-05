@@ -30,6 +30,16 @@ export const EXAM_CONFIG = {
 };
 
 export const NAV_ITEMS = [
+  { path: '/learn', label: '학습하기', icon: 'fa-solid fa-graduation-cap',
+    children: [
+      { path: '/learn/counseling', label: '직업상담학' },
+      { path: '/learn/psychology', label: '직업심리학' },
+      { path: '/learn/jobinfo', label: '직업정보론' },
+      { path: '/learn/labor_market', label: '노동시장론' },
+      { path: '/learn/labor_law', label: '노동관계법규' },
+      { path: '/learn/silgi', label: '실기 실무' },
+    ]
+  },
   { path: '/pilgi', label: '필기', icon: 'fa-solid fa-pen-to-square' },
   { path: '/silgi', label: '실기', icon: 'fa-solid fa-file-pen' },
   { path: '/dashboard', label: '대시보드', icon: 'fa-solid fa-chart-pie' },

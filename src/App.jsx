@@ -29,6 +29,9 @@ import WrongAnswers from './pages/study/WrongAnswers';
 
 import ExamInfo from './pages/info/ExamInfo';
 
+import LearnHome from './pages/learn/LearnHome';
+import SubjectStudy from './pages/learn/SubjectStudy';
+
 function AppLayout() {
   return (
     <>
@@ -37,6 +40,9 @@ function AppLayout() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginPage />} />
+
+          <Route path="/learn" element={<LearnHome />} />
+          <Route path="/learn/:subjectCode" element={<SubjectStudy />} />
 
           <Route path="/pilgi" element={<PilgiHome />} />
           <Route path="/pilgi/select" element={<ExamSelect />} />

@@ -13,6 +13,7 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showMobileColorPicker, setShowMobileColorPicker] = useState(false);
+  const [mobileSubnavOpen, setMobileSubnavOpen] = useState({});
   const colorPickerRef = useRef(null);
   const mobileColorPickerRef = useRef(null);
 
@@ -24,6 +25,7 @@ export default function Navbar() {
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    setMobileSubnavOpen({});
   }, [location.pathname]);
 
   useEffect(() => {
@@ -37,6 +39,10 @@ export default function Navbar() {
 
   const themeIcon = mode === 'auto' ? '\u25D1' : mode === 'light' ? '\u2600\uFE0F' : '\uD83C\uDF19';
 
+  const toggleMobileSubnav = (path) => {
+    setMobileSubnavOpen(prev => ({ ...prev, [path]: !prev[path] }));
+  };
+
   return (
     <>
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`} aria-label="메인 네비게이션">
@@ -48,13 +54,22 @@ export default function Navbar() {
 
           <ul className="nav-links">
             {NAV_ITEMS.map(item => (
-              <li key={item.path} className="nav-item">
+              <li key={item.path} className={`nav-item ${item.children ? 'nav-item-has-children' : ''}`}>
                 <Link
                   to={item.path}
                   className={`nav-link ${location.pathname.startsWith(item.path) ? 'active' : ''}`}
                 >
                   <i className={item.icon} /> {item.label}
                 </Link>
+                {item.children && (
+                  <ul className="nav-dropdown">
+                    {item.children.map(child => (
+                      <li key={child.path}>
+                        <Link to={child.path} className="nav-dropdown-link">{child.label}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </li>
             ))}
           </ul>
@@ -117,9 +132,33 @@ export default function Navbar() {
         <ul className="mobile-nav-links">
           {NAV_ITEMS.map(item => (
             <li key={item.path}>
-              <Link to={item.path} className="mobile-nav-link">
-                <i className={item.icon} style={{ marginRight: 8 }} /> {item.label}
-              </Link>
+              {item.children ? (
+                <>
+                  <button
+                    className="mobile-subnav-toggle"
+                    onClick={() => toggleMobileSubnav(item.path)}
+                  >
+                    <span><i className={item.icon} style={{ marginRight: 8 }} /> {item.label}</span>
+                    <i className={`fa-solid fa-chevron-down toggle-arrow ${mobileSubnavOpen[item.path] ? 'open' : ''}`} />
+                  </button>
+                  {mobileSubnavOpen[item.path] && (
+                    <ul className="mobile-subnav">
+                      <li>
+                        <Link to={item.path} className="mobile-subnav-link">전체 과목 보기</Link>
+                      </li>
+                      {item.children.map(child => (
+                        <li key={child.path}>
+                          <Link to={child.path} className="mobile-subnav-link">{child.label}</Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              ) : (
+                <Link to={item.path} className="mobile-nav-link">
+                  <i className={item.icon} style={{ marginRight: 8 }} /> {item.label}
+                </Link>
+              )}
             </li>
           ))}
           <li>

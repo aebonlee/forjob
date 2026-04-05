@@ -99,6 +99,11 @@
     /* Study Stats */
     .study-stats-grid { grid-template-columns: repeat(3, 1fr); }
 
+    /* Learn */
+    .learn-grid { grid-template-columns: 1fr; }
+    .subject-study-layout { grid-template-columns: 1fr; }
+    .chapter-nav { position: static; }
+
     /* Footer */
     .footer-content { grid-template-columns: 1fr 1fr; gap: 32px; }
     .footer-brand { grid-column: 1 / -1; }
@@ -171,6 +176,14 @@
 
     /* Key Terms */
     .key-terms-grid { grid-template-columns: 1fr; }
+
+    /* Learn */
+    .chapter-header { padding: 16px 20px; }
+    .chapter-title { font-size: 15px; }
+    .topic-header { padding: 12px 16px; }
+    .topic-content { padding: 16px 20px; margin: 0 8px 8px; font-size: 14px; }
+    .subject-nav-bottom { flex-direction: column; }
+    .subject-nav-btn { width: 100%; }
 
     /* Footer */
     .footer-content { grid-template-columns: 1fr; gap: 32px; }

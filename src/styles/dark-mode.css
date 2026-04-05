@@ -851,6 +851,147 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
     background: var(--text-light);
 }
 
+/* ===== Learn Pages Dark ===== */
+html[data-theme="dark"] .learn-card {
+    background: var(--bg-white);
+    border-color: var(--border-light);
+}
+html[data-theme="dark"] .learn-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+html[data-theme="dark"] .learn-card-title {
+    color: #F1F5F9;
+}
+html[data-theme="dark"] .learn-card-desc {
+    color: var(--text-secondary);
+}
+html[data-theme="dark"] .learn-card-badge {
+    background: var(--bg-light-gray);
+    color: var(--text-light);
+}
+html[data-theme="dark"] .learn-card-arrow {
+    color: var(--text-light);
+}
+
+html[data-theme="dark"] .chapter-nav {
+    background: var(--bg-white);
+    border-color: var(--border-light);
+}
+html[data-theme="dark"] .chapter-nav-title {
+    color: var(--text-light);
+    border-bottom-color: var(--border-light);
+}
+html[data-theme="dark"] .chapter-nav-item {
+    color: var(--text-secondary);
+}
+html[data-theme="dark"] .chapter-nav-item:hover {
+    background: var(--bg-light-gray);
+    color: var(--primary-blue-light);
+}
+html[data-theme="dark"] .chapter-nav-item.active {
+    background: rgba(61, 109, 181, 0.15);
+    color: var(--primary-blue-light);
+}
+html[data-theme="dark"] .chapter-nav-num {
+    background: var(--bg-medium-gray);
+    color: var(--text-light);
+}
+html[data-theme="dark"] .chapter-nav-item.active .chapter-nav-num {
+    background: var(--primary-blue-light);
+    color: #FFFFFF;
+}
+
+html[data-theme="dark"] .chapter-accordion {
+    background: var(--bg-white);
+    border-color: var(--border-light);
+}
+html[data-theme="dark"] .chapter-header:hover {
+    background: var(--bg-light-gray);
+}
+html[data-theme="dark"] .chapter-header.open {
+    border-bottom-color: var(--border-light);
+}
+html[data-theme="dark"] .chapter-title {
+    color: #F1F5F9;
+}
+html[data-theme="dark"] .chapter-count {
+    background: var(--bg-light-gray);
+    color: var(--text-light);
+}
+
+html[data-theme="dark"] .topic-header:hover,
+html[data-theme="dark"] .topic-header.open {
+    background: var(--bg-light-gray);
+}
+html[data-theme="dark"] .topic-title-text {
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .topic-content {
+    background: var(--bg-light-gray);
+    color: var(--text-secondary);
+}
+html[data-theme="dark"] .topic-content h4 {
+    color: #F1F5F9;
+}
+html[data-theme="dark"] .topic-content li strong {
+    color: #E2E8F0;
+}
+html[data-theme="dark"] .topic-content table th {
+    background: var(--bg-medium-gray);
+    color: #F1F5F9;
+}
+html[data-theme="dark"] .topic-content table td {
+    border-color: var(--border-light);
+}
+html[data-theme="dark"] .topic-content .formula-box {
+    background: var(--bg-white);
+    border-color: var(--border-light);
+}
+
+html[data-theme="dark"] .subject-nav-btn {
+    background: var(--bg-white);
+    border-color: var(--border-light);
+}
+html[data-theme="dark"] .subject-nav-btn:hover {
+    border-color: var(--primary-blue-light);
+}
+html[data-theme="dark"] .subject-nav-btn i {
+    color: var(--primary-blue-light);
+}
+html[data-theme="dark"] .subject-nav-name {
+    color: var(--text-primary);
+}
+html[data-theme="dark"] .subject-nav-label {
+    color: var(--text-light);
+}
+html[data-theme="dark"] .subject-back-link {
+    color: rgba(255, 255, 255, 0.7);
+}
+html[data-theme="dark"] .subject-back-link:hover {
+    color: #FFFFFF;
+}
+
+/* Nav Dropdown Dark */
+html[data-theme="dark"] .nav-dropdown {
+    background: rgba(30, 41, 59, 0.98);
+    border-color: var(--border-light);
+}
+html[data-theme="dark"] .nav-dropdown-link {
+    color: var(--text-secondary);
+}
+html[data-theme="dark"] .nav-dropdown-link:hover {
+    background: var(--bg-medium-gray);
+    color: var(--primary-blue-light);
+}
+html[data-theme="dark"] .mobile-subnav-link {
+    color: var(--text-light);
+}
+html[data-theme="dark"] .mobile-subnav-link:hover {
+    color: var(--primary-blue-light);
+    background: var(--bg-light-gray);
+}
+
 /* ===== Focus Visible Dark ===== */
 html[data-theme="dark"] :focus-visible {
     outline-color: var(--primary-blue-light);
