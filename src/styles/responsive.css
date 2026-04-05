@@ -107,6 +107,7 @@
 
     /* Learn */
     .learn-grid { grid-template-columns: 1fr; }
+    .practice-grid { grid-template-columns: 1fr; }
     .subject-study-layout { grid-template-columns: 1fr; }
     .chapter-nav { position: static; }
 

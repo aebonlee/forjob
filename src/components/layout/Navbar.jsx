@@ -53,25 +53,30 @@ export default function Navbar() {
           </Link>
 
           <ul className="nav-links">
-            {NAV_ITEMS.map(item => (
-              <li key={item.path} className={`nav-item ${item.children ? 'nav-item-has-children' : ''}`}>
-                <Link
-                  to={item.path}
-                  className={`nav-link ${location.pathname.startsWith(item.path) ? 'active' : ''}`}
-                >
-                  {item.label}
-                </Link>
-                {item.children && (
-                  <ul className="nav-dropdown">
-                    {item.children.map(child => (
-                      <li key={child.path}>
-                        <Link to={child.path} className="nav-dropdown-link">{child.label}</Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
+            {NAV_ITEMS.map(item => {
+              const isActive = item.children
+                ? item.children.some(child => location.pathname === child.path || location.pathname.startsWith(child.path + '/'))
+                : location.pathname === item.path;
+              return (
+                <li key={item.label} className={`nav-item ${item.children ? 'nav-item-has-children' : ''}`}>
+                  <Link
+                    to={item.path}
+                    className={`nav-link ${isActive ? 'active' : ''}`}
+                  >
+                    {item.label}
+                  </Link>
+                  {item.children && (
+                    <ul className="nav-dropdown">
+                      {item.children.map(child => (
+                        <li key={child.path}>
+                          <Link to={child.path} className="nav-dropdown-link">{child.label}</Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              );
+            })}
           </ul>
 
           <div className="navbar-actions">
@@ -131,21 +136,18 @@ export default function Navbar() {
       <div className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`} aria-hidden={!isMobileMenuOpen}>
         <ul className="mobile-nav-links">
           {NAV_ITEMS.map(item => (
-            <li key={item.path}>
+            <li key={item.label}>
               {item.children ? (
                 <>
                   <button
                     className="mobile-subnav-toggle"
-                    onClick={() => toggleMobileSubnav(item.path)}
+                    onClick={() => toggleMobileSubnav(item.label)}
                   >
                     <span>{item.label}</span>
-                    <i className={`fa-solid fa-chevron-down toggle-arrow ${mobileSubnavOpen[item.path] ? 'open' : ''}`} />
+                    <i className={`fa-solid fa-chevron-down toggle-arrow ${mobileSubnavOpen[item.label] ? 'open' : ''}`} />
                   </button>
-                  {mobileSubnavOpen[item.path] && (
+                  {mobileSubnavOpen[item.label] && (
                     <ul className="mobile-subnav">
-                      <li>
-                        <Link to={item.path} className="mobile-subnav-link">전체 과목 보기</Link>
-                      </li>
                       {item.children.map(child => (
                         <li key={child.path}>
                           <Link to={child.path} className="mobile-subnav-link">{child.label}</Link>
