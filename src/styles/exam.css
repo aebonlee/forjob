@@ -144,11 +144,13 @@
 
 /* ===== Exam Container ===== */
 .exam-container {
-    display: grid;
-    grid-template-columns: 1fr 280px;
-    gap: 24px;
     min-height: calc(100vh - var(--nav-height));
     padding-top: var(--nav-height);
+}
+.exam-body {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 0;
 }
 .exam-main {
     padding: 32px 40px;

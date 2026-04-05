@@ -70,7 +70,7 @@
     .pilgi-subjects-grid { grid-template-columns: repeat(3, 1fr); }
 
     /* Exam Container */
-    .exam-container {
+    .exam-body {
         grid-template-columns: 1fr;
     }
     .exam-sidebar {
@@ -464,7 +464,7 @@
         break-inside: avoid;
     }
 
-    .exam-container { grid-template-columns: 1fr; }
+    .exam-body { grid-template-columns: 1fr; }
     .dashboard-grid { grid-template-columns: 1fr; }
     .practice-container { grid-template-columns: 1fr; }
 
