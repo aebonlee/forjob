@@ -32,6 +32,15 @@ export default function SilgiHome() {
             <span className="pilgi-mode-badge">해설 포함</span>
           </Link>
 
+          <Link to="/silgi/frequent" className="pilgi-mode-card">
+            <div className="pilgi-mode-icon study">
+              <i className="fa-solid fa-fire" />
+            </div>
+            <h3>5개년 빈출 정리</h3>
+            <p>2019~2023 5개년 빈출 기출문제 177문항 상세 해설</p>
+            <span className="pilgi-mode-badge">177문항</span>
+          </Link>
+
           <Link to="/silgi/terms" className="pilgi-mode-card">
             <div className="pilgi-mode-icon exam">
               <i className="fa-solid fa-book" />

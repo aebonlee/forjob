@@ -22,6 +22,7 @@ import PracticeResult from './pages/silgi/PracticeResult';
 import KeyTerms from './pages/silgi/KeyTerms';
 import SilgiExamList from './pages/silgi/SilgiExamList';
 import SilgiExamDetail from './pages/silgi/SilgiExamDetail';
+import SilgiFrequent from './pages/silgi/SilgiFrequent';
 
 import Dashboard from './pages/dashboard/Dashboard';
 import StudyHistory from './pages/dashboard/StudyHistory';
@@ -38,7 +39,7 @@ import PracticeHome from './pages/practice/PracticeHome';
 
 function AppLayout() {
   return (
-    <>
+    <div className="app-layout">
       <Navbar />
       <main id="main-content">
         <Routes>
@@ -63,6 +64,7 @@ function AppLayout() {
           <Route path="/silgi/terms" element={<KeyTerms />} />
           <Route path="/silgi/past" element={<SilgiExamList />} />
           <Route path="/silgi/past/:examId" element={<SilgiExamDetail />} />
+          <Route path="/silgi/frequent" element={<SilgiFrequent />} />
 
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/history" element={<StudyHistory />} />
@@ -76,7 +78,7 @@ function AppLayout() {
         </Routes>
       </main>
       <Footer />
-    </>
+    </div>
   );
 }
 

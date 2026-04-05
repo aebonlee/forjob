@@ -867,3 +867,117 @@
     color: #FFFFFF;
     border-color: var(--primary-blue);
 }
+
+/* ===== Frequent Questions Page ===== */
+.freq-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.freq-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-base);
+    font-family: inherit;
+}
+.freq-filter-btn:hover {
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+}
+.freq-filter-btn.active {
+    color: #FFFFFF;
+}
+.freq-filter-btn i {
+    font-size: 12px;
+}
+.freq-filter-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    font-size: 11px;
+    font-weight: 800;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius-full);
+}
+.freq-filter-btn.active .freq-filter-count {
+    background: rgba(255, 255, 255, 0.25);
+    color: #FFFFFF;
+}
+
+.freq-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    margin-bottom: 16px;
+    transition: var(--transition-base);
+}
+.freq-search:focus-within {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(27, 58, 107, 0.08);
+}
+.freq-search i {
+    color: var(--text-light);
+    font-size: 14px;
+    flex-shrink: 0;
+}
+.freq-search input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text-primary);
+    background: transparent;
+}
+.freq-search input::placeholder {
+    color: var(--text-light);
+}
+.freq-search-clear {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-light-gray);
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 12px;
+    transition: var(--transition-base);
+}
+.freq-search-clear:hover {
+    background: var(--border-light);
+    color: var(--text-primary);
+}
+
+.freq-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-light);
+}
+.freq-empty i {
+    font-size: 32px;
+    margin-bottom: 12px;
+    display: block;
+}
+.freq-empty p {
+    font-size: 15px;
+}

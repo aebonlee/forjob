@@ -241,6 +241,8 @@
     .sq-controls { flex-wrap: wrap; }
     .sq-bottom-nav { flex-direction: column; }
     .sq-bottom-nav .btn { width: 100%; text-align: center; }
+    .freq-filter { gap: 6px; }
+    .freq-filter-btn { padding: 6px 12px; font-size: 12px; }
 
     /* Footer */
     .footer-content { grid-template-columns: 1fr; gap: 32px; }
