@@ -788,7 +788,13 @@ html[data-theme="dark"] .study-timer-btn:hover {
 
 /* ===== Footer Dark ===== */
 html[data-theme="dark"] .footer {
-    background: #070D1A;
+    background: linear-gradient(180deg, #070D1A 0%, #020408 100%);
+}
+html[data-theme="dark"] .back-to-top {
+    background: var(--primary-blue-light);
+}
+html[data-theme="dark"] .back-to-top:hover {
+    background: var(--primary-blue);
 }
 
 /* ===== Login Dark ===== */
