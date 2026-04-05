@@ -4,29 +4,47 @@ import { useToast } from './ToastContext';
 
 const AuthContext = createContext({});
 
+const SITE_URL = import.meta.env.VITE_SITE_URL || window.location.origin;
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
-      setLoading(false);
+      if (event === 'INITIAL_SESSION') {
+        setLoading(false);
+      }
+      if (event === 'SIGNED_IN') {
+        setLoading(false);
+      }
+      if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setLoading(false);
+      }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
+    // Fallback: 5초 타임아웃 (INITIAL_SESSION이 오지 않는 경우 방지)
+    const fallback = setTimeout(() => {
+      setLoading((prev) => {
+        if (prev) console.warn('Auth: INITIAL_SESSION timeout, forcing loading=false');
+        return false;
+      });
+    }, 5000);
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(fallback);
+    };
   }, []);
 
   const signInWithGoogle = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: `${window.location.origin}/` },
+        options: { redirectTo: SITE_URL },
       });
       if (error) {
         console.error('Google login error:', error.message);
@@ -42,7 +60,7 @@ export function AuthProvider({ children }) {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'kakao',
-        options: { redirectTo: `${window.location.origin}/` },
+        options: { redirectTo: SITE_URL },
       });
       if (error) {
         console.error('Kakao login error:', error.message);
