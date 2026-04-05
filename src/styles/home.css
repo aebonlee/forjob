@@ -80,6 +80,10 @@
     box-shadow: var(--shadow-lg);
     transform: translateY(-6px);
 }
+.home-feature-card--highlight {
+    background: rgba(27, 58, 107, 0.04);
+    border-color: rgba(27, 58, 107, 0.12);
+}
 
 /* Subject-specific border colors */
 .home-feature-card[data-subject="counseling"] { border-left-color: var(--color-counseling); }

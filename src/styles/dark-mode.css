@@ -163,6 +163,10 @@ html[data-theme="dark"] .section-subtitle {
 html[data-theme="dark"] .home-feature-card {
     border-left-color: var(--primary-blue-light) !important;
 }
+html[data-theme="dark"] .home-feature-card--highlight {
+    background: rgba(61, 109, 181, 0.08);
+    border-color: rgba(61, 109, 181, 0.2);
+}
 html[data-theme="dark"] .home-feature-icon {
     background: rgba(61, 109, 181, 0.15);
     color: var(--primary-blue-light);

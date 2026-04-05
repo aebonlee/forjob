@@ -450,14 +450,14 @@ function LandingHome() {
           </div>
           <div className="home-features-grid">
             {[
-              { icon: 'fa-solid fa-desktop', title: 'CBT 모의시험', desc: '실제 시험과 동일한 환경의 온라인 CBT로 실전 감각을 키우세요', color: '#1B3A6B' },
+              { icon: 'fa-solid fa-desktop', title: 'CBT 모의시험', desc: '실제 시험과 동일한 환경의 온라인 CBT로 실전 감각을 키우세요', color: '#1B3A6B', highlight: true },
               { icon: 'fa-solid fa-book-open', title: '학습 모드', desc: '답 선택 즉시 정답과 해설을 확인하며 효율적으로 학습하세요', color: '#2A4F8A' },
               { icon: 'fa-solid fa-chart-pie', title: '과목별 분석', desc: '레이더 차트로 강점과 약점을 한눈에 파악하세요', color: '#3D6DB5' },
               { icon: 'fa-solid fa-rotate-left', title: '오답 노트', desc: '틀린 문제를 모아 반복 학습으로 실력을 올리세요', color: '#1E4D80' },
-              { icon: 'fa-solid fa-trophy', title: '합격 예측', desc: '최근 시험 결과를 분석하여 합격 확률을 예측합니다', color: '#0F2444' },
-              { icon: 'fa-solid fa-file-pen', title: '실기 연습', desc: '서술형 문제와 모범답안 비교로 실기도 준비하세요', color: '#1B3A6B' },
+              { icon: 'fa-solid fa-trophy', title: '합격 예측', desc: '최근 시험 결과를 분석하여 합격 확률을 예측합니다', color: '#0F2444', highlight: true },
+              { icon: 'fa-solid fa-file-pen', title: '실기 연습', desc: '서술형 문제와 모범답안 비교로 실기도 준비하세요', color: '#1B3A6B', highlight: true },
             ].map((feat, idx) => (
-              <div key={idx} className="home-feature-card" style={{ borderLeftColor: feat.color }}>
+              <div key={idx} className={`home-feature-card${(feat as any).highlight ? ' home-feature-card--highlight' : ''}`} style={{ borderLeftColor: feat.color }}>
                 <div className="home-feature-icon" style={{ color: feat.color, background: `${feat.color}12` }}>
                   <i className={feat.icon} />
                 </div>
