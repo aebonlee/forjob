@@ -10,6 +10,7 @@ interface SubscriptionState {
   freeTrialRemaining: number;
   loading: boolean;
   refresh: () => Promise<void>;
+  grantAccess: (expiresAt: Date, sub?: any) => void;
 }
 
 const SubscriptionContext = createContext<SubscriptionState | null>(null);
@@ -21,6 +22,13 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [expiresAt, setExpiresAt] = useState<Date | null>(null);
   const [freeTrialRemaining, setFreeTrialRemaining] = useState(1);
   const [loading, setLoading] = useState(true);
+
+  const grantAccess = useCallback((expires: Date, sub?: any) => {
+    setHasAccess(true);
+    setExpiresAt(expires);
+    setSubscription(sub || { plan_type: 'coupon', payment_method: 'coupon' });
+    setLoading(false);
+  }, []);
 
   const refresh = useCallback(async () => {
     if (!user) {
@@ -58,7 +66,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   return (
     <SubscriptionContext.Provider value={{
       hasAccess, subscription, expiresAt, expiringSoon,
-      freeTrialRemaining, loading, refresh,
+      freeTrialRemaining, loading, refresh, grantAccess,
     }}>
       {children}
     </SubscriptionContext.Provider>

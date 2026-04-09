@@ -10,7 +10,7 @@ import '../../styles/admin.css';
 
 function CouponRedeemContent() {
   const { user } = useAuth();
-  const { refresh } = useSubscription();
+  const { refresh, grantAccess } = useSubscription();
   const { showToast } = useToast();
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -112,11 +112,12 @@ function CouponRedeemContent() {
 
     if (orderErr) {
       console.error('Order creation error:', orderErr);
-      // 주문 생성 실패해도 쿠폰 사용 기록은 이미 저장됨 → 접근 허용 가능
     }
 
-    // 7. Refresh subscription
-    await refresh();
+    // 7. 즉시 접근 권한 부여 (DB 쿼리 의존 없이)
+    grantAccess(expiresAt, { plan_type: planType, payment_method: 'coupon' });
+    // 백그라운드로 refresh도 시도
+    refresh().catch(() => {});
 
     showToast(`쿠폰이 등록되었습니다! ${couponDays}일 이용권이 활성화되었습니다.`, 'success');
     setSuccess(true);
