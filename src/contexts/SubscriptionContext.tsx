@@ -2,6 +2,8 @@ import { createContext, useContext, useState, useEffect, useCallback, type React
 import { useAuth } from './AuthContext';
 import { checkSubscription, checkFreeTrial, isExpiringSoon } from '../utils/subscription';
 
+const ACCESS_KEY = 'jp_coupon_access';
+
 interface SubscriptionState {
   hasAccess: boolean;
   subscription: any | null;
@@ -11,6 +13,33 @@ interface SubscriptionState {
   loading: boolean;
   refresh: () => Promise<void>;
   grantAccess: (expiresAt: Date, sub?: any) => void;
+}
+
+/** localStorage에 쿠폰 접근 권한 저장 */
+function saveAccessLocal(userId: string, expiresAt: Date, sub: any) {
+  try {
+    localStorage.setItem(ACCESS_KEY, JSON.stringify({
+      userId, expiresAt: expiresAt.toISOString(), sub,
+    }));
+  } catch { /* quota 등 무시 */ }
+}
+
+/** localStorage에서 유효한 접근 권한 로드 */
+function loadAccessLocal(userId: string) {
+  try {
+    const raw = localStorage.getItem(ACCESS_KEY);
+    if (!raw) return null;
+    const d = JSON.parse(raw);
+    if (d.userId !== userId) return null;
+    const exp = new Date(d.expiresAt);
+    if (exp <= new Date()) {
+      localStorage.removeItem(ACCESS_KEY);
+      return null;
+    }
+    return { expiresAt: exp, subscription: d.sub };
+  } catch {
+    return null;
+  }
 }
 
 const SubscriptionContext = createContext<SubscriptionState | null>(null);
@@ -24,11 +53,13 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const grantAccess = useCallback((expires: Date, sub?: any) => {
+    const s = sub || { plan_type: 'coupon', payment_method: 'coupon' };
     setHasAccess(true);
     setExpiresAt(expires);
-    setSubscription(sub || { plan_type: 'coupon', payment_method: 'coupon' });
+    setSubscription(s);
     setLoading(false);
-  }, []);
+    if (user?.id) saveAccessLocal(user.id, expires, s);
+  }, [user]);
 
   const refresh = useCallback(async () => {
     if (!user) {
@@ -47,12 +78,33 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         checkFreeTrial(user.id),
       ]);
 
-      setHasAccess(subResult.hasAccess);
-      setSubscription(subResult.subscription);
-      setExpiresAt(subResult.expiresAt);
+      if (subResult.hasAccess) {
+        setHasAccess(true);
+        setSubscription(subResult.subscription);
+        setExpiresAt(subResult.expiresAt);
+      } else {
+        // DB 쿼리 실패 시 localStorage fallback
+        const local = loadAccessLocal(user.id);
+        if (local) {
+          setHasAccess(true);
+          setSubscription(local.subscription);
+          setExpiresAt(local.expiresAt);
+        } else {
+          setHasAccess(false);
+          setSubscription(null);
+          setExpiresAt(null);
+        }
+      }
       setFreeTrialRemaining(trialResult.canTrial ? 1 : 0);
     } catch (err) {
       console.error('Subscription check error:', err);
+      // 에러 시에도 localStorage fallback
+      const local = user?.id ? loadAccessLocal(user.id) : null;
+      if (local) {
+        setHasAccess(true);
+        setSubscription(local.subscription);
+        setExpiresAt(local.expiresAt);
+      }
     }
     setLoading(false);
   }, [user]);
