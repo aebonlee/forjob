@@ -1837,6 +1837,24 @@ html[data-theme="dark"] .sub-banner--upgrade {
     background: rgba(139, 92, 246, 0.12);
     border-color: rgba(139, 92, 246, 0.25);
 }
+html[data-theme="dark"] .btn-coupon {
+    color: #C4B5FD;
+    background: rgba(124, 58, 237, 0.15);
+    border-color: rgba(124, 58, 237, 0.35);
+}
+html[data-theme="dark"] .coupon-tooltip {
+    background: #1E293B;
+    border-color: rgba(124, 58, 237, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+html[data-theme="dark"] .coupon-tooltip::before {
+    background: #1E293B;
+    border-color: rgba(124, 58, 237, 0.3);
+}
+html[data-theme="dark"] .coupon-tooltip-close { color: #64748B; }
+html[data-theme="dark"] .coupon-tooltip-close:hover { color: #E2E8F0; background: #334155; }
+html[data-theme="dark"] .coupon-tooltip-msg { color: #CBD5E1; }
+html[data-theme="dark"] .coupon-tooltip-msg strong { color: #C4B5FD; }
 
 /* ===== Dark Mode Font Readability ===== */
 html[data-theme="dark"] body {

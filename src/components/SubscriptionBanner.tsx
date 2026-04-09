@@ -31,7 +31,10 @@ export default function SubscriptionBanner() {
           <span>
             <i className="fa-solid fa-gift" /> 필기 CBT <strong>1회 무료 체험</strong>이 가능합니다!
           </span>
-          <Link to="/pilgi/select" className="btn btn-sm btn-primary">무료 체험</Link>
+          <div className="sub-banner-btns">
+            <Link to="/pilgi/select" className="btn btn-sm btn-primary">무료 체험</Link>
+            <Link to="/coupon" className="btn btn-sm btn-coupon">쿠폰 등록</Link>
+          </div>
         </div>
       </div>
     );
@@ -45,7 +48,10 @@ export default function SubscriptionBanner() {
           <span>
             <i className="fa-solid fa-crown" /> 이용권을 구매하면 모든 학습 콘텐츠를 이용할 수 있습니다.
           </span>
-          <Link to="/about/pricing" className="btn btn-sm btn-primary">요금제 보기</Link>
+          <div className="sub-banner-btns">
+            <Link to="/about/pricing" className="btn btn-sm btn-primary">요금제 보기</Link>
+            <Link to="/coupon" className="btn btn-sm btn-coupon">쿠폰 등록</Link>
+          </div>
         </div>
       </div>
     );
