@@ -20,6 +20,8 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<Tab>('members');
   const [orders, setOrders] = useState<any[]>([]);
   const [coupons, setCoupons] = useState<any[]>([]);
+  const [members, setMembers] = useState<any[]>([]);
+  const [redemptions, setRedemptions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [couponQty, setCouponQty] = useState(10);
   const [couponDays, setCouponDays] = useState(1);
@@ -31,17 +33,36 @@ export default function AdminDashboard() {
 
   const loadData = async () => {
     setLoading(true);
-    const [ordersRes, couponsRes] = await Promise.all([
+    const [ordersRes, couponsRes, profilesRes, redemptionsRes] = await Promise.all([
       supabase.from(TABLES.ORDERS).select('*').order('created_at', { ascending: false }),
       supabase.from(TABLES.COUPONS).select('*').order('created_at', { ascending: false }),
+      supabase.from(TABLES.PROFILES).select('*').order('created_at', { ascending: false }),
+      supabase.from(TABLES.COUPON_REDEMPTIONS).select('*').order('created_at', { ascending: false }),
     ]);
     if (ordersRes.data) setOrders(ordersRes.data);
     if (couponsRes.data) setCoupons(couponsRes.data);
+    if (redemptionsRes.data) setRedemptions(redemptionsRes.data);
+
+    // 회원 목록: 프로필 + 주문 + 쿠폰 사용 기록에서 통합
+    const emailMap: Record<string, { email: string; firstSeen: string; source: string }> = {};
+    (profilesRes.data || []).forEach((p: any) => {
+      const e = (p.email || '').toLowerCase();
+      if (e && !emailMap[e]) emailMap[e] = { email: e, firstSeen: p.created_at, source: '가입' };
+    });
+    (ordersRes.data || []).forEach((o: any) => {
+      const e = (o.user_email || '').toLowerCase();
+      if (e && !emailMap[e]) emailMap[e] = { email: e, firstSeen: o.created_at, source: '주문' };
+    });
+    (redemptionsRes.data || []).forEach((r: any) => {
+      const e = (r.user_email || '').toLowerCase();
+      if (e && !emailMap[e]) emailMap[e] = { email: e, firstSeen: r.created_at, source: '쿠폰' };
+    });
+    setMembers(Object.values(emailMap).sort((a, b) => new Date(b.firstSeen).getTime() - new Date(a.firstSeen).getTime()));
     setLoading(false);
   };
 
   // Stats
-  const uniqueEmails = [...new Set(orders.map(o => o.user_email).filter(Boolean))];
+  const uniqueEmails = members;
   const totalRevenue = orders
     .filter(o => o.payment_status === 'paid')
     .reduce((sum, o) => sum + (o.total_amount || 0), 0);
@@ -145,7 +166,7 @@ export default function AdminDashboard() {
         <div className="admin-stats">
           <div className="admin-stat-card">
             <div className="admin-stat-icon"><i className="fa-solid fa-users" /></div>
-            <div className="admin-stat-value">{uniqueEmails.length}</div>
+            <div className="admin-stat-value">{members.length}</div>
             <div className="admin-stat-label">총 회원수</div>
           </div>
           <div className="admin-stat-card">
@@ -181,34 +202,52 @@ export default function AdminDashboard() {
         {/* Members Tab */}
         {activeTab === 'members' && (
           <div className="admin-panel">
-            <h2>회원 목록</h2>
-            {uniqueEmails.length === 0 ? (
-              <p className="admin-empty">등록된 주문이 없습니다.</p>
+            <h2>회원 목록 ({members.length}명)</h2>
+            {members.length === 0 ? (
+              <p className="admin-empty">등록된 회원이 없습니다.</p>
             ) : (
               <div className="admin-table-wrap">
                 <table className="admin-table">
                   <thead>
                     <tr>
                       <th>이메일</th>
+                      <th>가입경로</th>
                       <th>주문수</th>
-                      <th>최근 결제일</th>
-                      <th>구독 상태</th>
+                      <th>쿠폰</th>
+                      <th>최초 확인일</th>
+                      <th>이용 상태</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {uniqueEmails.map(email => {
-                      const userOrders = orders.filter(o => o.user_email === email);
+                    {members.map(member => {
+                      const email = member.email;
+                      const userOrders = orders.filter(o => (o.user_email || '').toLowerCase() === email);
                       const paidOrders = userOrders.filter(o => o.payment_status === 'paid');
-                      const latestOrder = paidOrders[0];
-                      const isActive = latestOrder?.expires_at && new Date(latestOrder.expires_at) > new Date();
+                      const latestPaid = paidOrders[0];
+                      const orderActive = latestPaid?.expires_at && new Date(latestPaid.expires_at) > new Date();
+                      const userRedemptions = redemptions.filter(r => (r.user_email || '').toLowerCase() === email);
+                      // 쿠폰 기반 접근 확인
+                      let couponActive = false;
+                      if (userRedemptions.length > 0) {
+                        const couponIds = [...new Set(userRedemptions.map(r => r.coupon_id))];
+                        for (const r of userRedemptions) {
+                          const cp = coupons.find(c => c.id === r.coupon_id);
+                          const days = cp?.days || 1;
+                          const exp = new Date(new Date(r.created_at).getTime() + days * 86400000);
+                          if (exp > new Date()) { couponActive = true; break; }
+                        }
+                      }
+                      const isActive = orderActive || couponActive;
                       return (
                         <tr key={email}>
                           <td>{email}</td>
+                          <td><span className="table-badge">{member.source}</span></td>
                           <td>{userOrders.length}</td>
-                          <td>{latestOrder ? new Date(latestOrder.created_at).toLocaleDateString('ko-KR') : '-'}</td>
+                          <td>{userRedemptions.length}</td>
+                          <td>{new Date(member.firstSeen).toLocaleDateString('ko-KR')}</td>
                           <td>
                             <span className={`table-badge ${isActive ? 'pass' : ''}`}>
-                              {isActive ? '이용중' : '만료/없음'}
+                              {isActive ? (couponActive && !orderActive ? '쿠폰 이용중' : '이용중') : '만료/없음'}
                             </span>
                           </td>
                         </tr>
