@@ -592,8 +592,8 @@ ${content}
 
   // Badge counts for sidebar
   const badgeCounts: Record<Tab, number> = {
-    members: registeredMembers.length,
-    orders: uniquePaidSubscribers,
+    members: members.length,
+    orders: portoneOrders.length,
     coupons: activeCoupons,
     progress: members.length,
   };
@@ -658,11 +658,6 @@ ${content}
               <div className="admin-stat-icon"><i className="fa-solid fa-users" /></div>
               <div className="admin-stat-value">{members.length}</div>
               <div className="admin-stat-label">총 회원수</div>
-            </div>
-            <div className="admin-stat-card">
-              <div className="admin-stat-icon"><i className="fa-solid fa-user-plus" /></div>
-              <div className="admin-stat-value">{registeredMembers.length}<span style={{ fontSize: '0.5em', color: '#888', marginLeft: 4 }}>({newMembersLast30.length})</span></div>
-              <div className="admin-stat-label">신규 가입 <span style={{ fontSize: '0.75em', color: '#888' }}>(30일)</span></div>
             </div>
             <div className="admin-stat-card">
               <div className="admin-stat-icon"><i className="fa-solid fa-user-check" /></div>
