@@ -175,6 +175,28 @@ export default function AdminDashboard() {
     .reduce((sum, o) => sum + (o.total_amount || 0), 0);
   const activeCoupons = coupons.filter(c => c.is_active && c.used_count < c.max_uses).length;
 
+  // 신규 회원 가입인원 (프로필 기반 실제 가입자)
+  const registeredMembers = useMemo(() =>
+    members.filter(m => m.source === '가입'), [members]);
+
+  // 최근 30일 신규 가입
+  const newMembersLast30 = useMemo(() => {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    return registeredMembers.filter(m => new Date(m.firstSeen) >= thirtyDaysAgo);
+  }, [registeredMembers]);
+
+  // 요금제 신청인원 (결제완료 기준 고유 사용자 수)
+  const uniquePaidSubscribers = useMemo(() => {
+    const paidEmails = new Set(
+      portoneOrders
+        .filter(o => o.payment_status === 'paid')
+        .map(o => (o.user_email || '').toLowerCase())
+        .filter(Boolean)
+    );
+    return paidEmails.size;
+  }, [portoneOrders]);
+
   // ── Sort / Pagination helpers ──
   const handleSort = (tab: Tab, key: string) => {
     setSortConfig(prev => {
@@ -570,8 +592,8 @@ ${content}
 
   // Badge counts for sidebar
   const badgeCounts: Record<Tab, number> = {
-    members: members.length,
-    orders: portoneOrders.length,
+    members: registeredMembers.length,
+    orders: uniquePaidSubscribers,
     coupons: activeCoupons,
     progress: members.length,
   };
@@ -638,9 +660,14 @@ ${content}
               <div className="admin-stat-label">총 회원수</div>
             </div>
             <div className="admin-stat-card">
-              <div className="admin-stat-icon"><i className="fa-solid fa-credit-card" /></div>
-              <div className="admin-stat-value">{portoneOrders.length}</div>
-              <div className="admin-stat-label">결제 건수</div>
+              <div className="admin-stat-icon"><i className="fa-solid fa-user-plus" /></div>
+              <div className="admin-stat-value">{registeredMembers.length}<span style={{ fontSize: '0.5em', color: '#888', marginLeft: 4 }}>({newMembersLast30.length})</span></div>
+              <div className="admin-stat-label">신규 가입 <span style={{ fontSize: '0.75em', color: '#888' }}>(30일)</span></div>
+            </div>
+            <div className="admin-stat-card">
+              <div className="admin-stat-icon"><i className="fa-solid fa-user-check" /></div>
+              <div className="admin-stat-value">{uniquePaidSubscribers}<span style={{ fontSize: '0.5em', color: '#888', marginLeft: 4 }}>/ {portoneOrders.filter(o => o.payment_status === 'paid').length}건</span></div>
+              <div className="admin-stat-label">요금제 신청인원</div>
             </div>
             <div className="admin-stat-card">
               <div className="admin-stat-icon"><i className="fa-solid fa-won-sign" /></div>
