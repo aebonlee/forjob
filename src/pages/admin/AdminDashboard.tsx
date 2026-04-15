@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import SEOHead from '../../components/SEOHead';
 import { supabase, TABLES } from '../../lib/supabase';
 import { useToast } from '../../contexts/ToastContext';
+import { RadarChart, BarChart } from '../../components/ScoreChart';
+import { SUBJECTS } from '../../config/site';
 import '../../styles/admin.css';
 
 function generateCouponCode(): string {
@@ -13,7 +15,7 @@ function generateCouponCode(): string {
   return `JP-${code}`;
 }
 
-type Tab = 'members' | 'orders' | 'coupons';
+type Tab = 'members' | 'orders' | 'coupons' | 'progress';
 
 export default function AdminDashboard() {
   const { showToast } = useToast();
@@ -31,6 +33,14 @@ export default function AdminDashboard() {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [cancelMemo, setCancelMemo] = useState('');
   const [updatingOrder, setUpdatingOrder] = useState(false);
+
+  // 회원 학습현황 state
+  const [progressSearch, setProgressSearch] = useState('');
+  const [selectedMember, setSelectedMember] = useState<any>(null);
+  const [memberPilgi, setMemberPilgi] = useState<any[]>([]);
+  const [memberSilgi, setMemberSilgi] = useState<any[]>([]);
+  const [memberAvgScores, setMemberAvgScores] = useState<Record<string, number>>({});
+  const [progressLoading, setProgressLoading] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -53,7 +63,7 @@ export default function AdminDashboard() {
     if (couponsRes.data) setCoupons(couponsRes.data);
     if (redemptionsRes.data) setRedemptions(redemptionsRes.data);
 
-    // 회원 목록: 주문 + 쿠폰 사용 기록에서만 통합 (jobpath 활동이 있는 회원만)
+    // 회원 목록: 주문 + 쿠폰 사용 기록에서만 통합 (활동이 있는 회원만)
     // 프로필은 이름 조회용으로만 사용
     const profileNameMap: Record<string, string> = {};
     (profilesRes.data || []).forEach((p: any) => {
@@ -84,7 +94,6 @@ export default function AdminDashboard() {
   };
 
   // Stats
-  const uniqueEmails = members;
   const totalRevenue = orders
     .filter(o => o.payment_status === 'paid')
     .reduce((sum, o) => sum + (o.total_amount || 0), 0);
@@ -99,7 +108,7 @@ export default function AdminDashboard() {
     setGenerating(true);
     const planType = couponDays === 1 ? '1day_trial' : `${couponDays}day`;
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 90); // 쿠폰 자체 유효기한 90일
+    expiresAt.setDate(expiresAt.getDate() + 90);
     const newCoupons = Array.from({ length: couponQty }, () => ({
       code: generateCouponCode(),
       plan_type: planType,
@@ -191,6 +200,100 @@ export default function AdminDashboard() {
     return list;
   }, [orders, orderFilter, orderSearch]);
 
+  // 회원 학습현황: 회원 선택 시 데이터 로드
+  const handleSelectMember = async (member: any) => {
+    setSelectedMember(member);
+    setProgressLoading(true);
+    try {
+      // 프로필에서 user_id 조회
+      const { data: profile } = await supabase
+        .from(TABLES.PROFILES)
+        .select('id')
+        .eq('email', member.email)
+        .single();
+
+      if (!profile) {
+        showToast('해당 회원의 프로필을 찾을 수 없습니다.', 'error');
+        setMemberPilgi([]);
+        setMemberSilgi([]);
+        setMemberAvgScores({});
+        setProgressLoading(false);
+        return;
+      }
+
+      const [pilgiRes, silgiRes] = await Promise.all([
+        supabase.from(TABLES.EXAM_SESSIONS).select('*')
+          .eq('user_id', profile.id)
+          .eq('exam_type', 'pilgi')
+          .not('completed_at', 'is', null)
+          .order('completed_at', { ascending: false }),
+        supabase.from(TABLES.EXAM_SESSIONS).select('*')
+          .eq('user_id', profile.id)
+          .eq('exam_type', 'silgi_practice')
+          .not('completed_at', 'is', null)
+          .order('completed_at', { ascending: false }),
+      ]);
+
+      const pilgiData = pilgiRes.data || [];
+      const silgiData = silgiRes.data || [];
+      setMemberPilgi(pilgiData);
+      setMemberSilgi(silgiData);
+
+      // 과목별 평균 점수 계산
+      const totals: Record<string, number> = {};
+      const counts: Record<string, number> = {};
+      SUBJECTS.forEach(s => { totals[s.code] = 0; counts[s.code] = 0; });
+      pilgiData.forEach((session: any) => {
+        if (session.score_by_subject) {
+          Object.entries(session.score_by_subject).forEach(([code, score]) => {
+            totals[code] = (totals[code] || 0) + (score as number);
+            counts[code] = (counts[code] || 0) + 1;
+          });
+        }
+      });
+      const avgs: Record<string, number> = {};
+      SUBJECTS.forEach(s => {
+        avgs[s.code] = counts[s.code] ? Math.round(totals[s.code] / counts[s.code]) : 0;
+      });
+      setMemberAvgScores(avgs);
+    } catch (err) {
+      console.error('회원 학습현황 로드 오류:', err);
+      showToast('학습현황 로드에 실패했습니다.', 'error');
+    }
+    setProgressLoading(false);
+  };
+
+  // 회원 학습현황: 검색 필터
+  const filteredMembers = useMemo(() => {
+    if (!progressSearch.trim()) return members;
+    const q = progressSearch.toLowerCase();
+    return members.filter(m =>
+      (m.name || '').toLowerCase().includes(q) ||
+      (m.email || '').toLowerCase().includes(q)
+    );
+  }, [members, progressSearch]);
+
+  // 필기/실기 통계 계산
+  const pilgiStats = useMemo(() => {
+    const total = memberPilgi.length;
+    const avg = total ? Math.round(memberPilgi.reduce((s, e) => s + (e.score_total || 0), 0) / total) : 0;
+    const passCount = memberPilgi.filter((s: any) => s.is_pass).length;
+    const passRate = total ? Math.round((passCount / total) * 100) : 0;
+    return { total, avg, passCount, passRate };
+  }, [memberPilgi]);
+
+  const silgiStats = useMemo(() => {
+    const total = memberSilgi.length;
+    const avg = total ? Math.round(memberSilgi.reduce((s, e) => s + (e.score_total || 0), 0) / total) : 0;
+    const passCount = memberSilgi.filter((s: any) => s.is_pass).length;
+    const passRate = total ? Math.round((passCount / total) * 100) : 0;
+    return { total, avg, passCount, passRate };
+  }, [memberSilgi]);
+
+  const weakSubjects = useMemo(() => {
+    return SUBJECTS.filter(s => memberAvgScores[s.code] > 0 && memberAvgScores[s.code] < 60);
+  }, [memberAvgScores]);
+
   const STATUS_LABELS: Record<string, { text: string; cls: string }> = {
     paid: { text: '결제완료', cls: 'pass' },
     pending: { text: '대기중', cls: '' },
@@ -269,6 +372,9 @@ export default function AdminDashboard() {
           <button className={`admin-tab ${activeTab === 'coupons' ? 'active' : ''}`} onClick={() => setActiveTab('coupons')}>
             <i className="fa-solid fa-ticket" /> 쿠폰 관리
           </button>
+          <button className={`admin-tab ${activeTab === 'progress' ? 'active' : ''}`} onClick={() => setActiveTab('progress')}>
+            <i className="fa-solid fa-chart-line" /> 회원 학습현황
+          </button>
         </div>
 
         {/* Members Tab */}
@@ -299,10 +405,8 @@ export default function AdminDashboard() {
                       const latestPaid = paidOrders[0];
                       const orderActive = latestPaid?.expires_at && new Date(latestPaid.expires_at) > new Date();
                       const userRedemptions = redemptions.filter(r => (r.user_email || '').toLowerCase() === email);
-                      // 쿠폰 기반 접근 확인
                       let couponActive = false;
                       if (userRedemptions.length > 0) {
-                        const couponIds = [...new Set(userRedemptions.map(r => r.coupon_id))];
                         for (const r of userRedemptions) {
                           const cp = coupons.find(c => c.id === r.coupon_id);
                           const days = cp?.days || 1;
@@ -398,8 +502,8 @@ export default function AdminDashboard() {
                       const isExpanded = expandedOrder === order.id;
                       const isExpired = order.expires_at && new Date(order.expires_at) < new Date();
                       return (
-                        <>
-                          <tr key={order.id} className={`admin-order-row ${isExpanded ? 'expanded' : ''}`} onClick={() => setExpandedOrder(isExpanded ? null : order.id)} style={{ cursor: 'pointer' }}>
+                        <tbody key={order.id}>
+                          <tr className={`admin-order-row ${isExpanded ? 'expanded' : ''}`} onClick={() => setExpandedOrder(isExpanded ? null : order.id)} style={{ cursor: 'pointer' }}>
                             <td className="order-num-cell">{order.order_number}</td>
                             <td>{order.user_name || order.user_email?.split('@')[0] || '-'}<br /><small style={{ color: 'var(--text-light)', fontSize: '11px' }}>{order.user_email}</small></td>
                             <td>{PLAN_LABELS[order.plan_type] || order.plan_type}</td>
@@ -416,7 +520,7 @@ export default function AdminDashboard() {
                             <td>{new Date(order.created_at).toLocaleDateString('ko-KR')}</td>
                           </tr>
                           {isExpanded && (
-                            <tr key={`${order.id}-detail`}>
+                            <tr>
                               <td colSpan={7} style={{ padding: 0 }}>
                                 <div className="admin-order-detail">
                                   <div className="admin-order-detail-info">
@@ -486,7 +590,7 @@ export default function AdminDashboard() {
                               </td>
                             </tr>
                           )}
-                        </>
+                        </tbody>
                       );
                     })}
                   </tbody>
@@ -577,6 +681,204 @@ export default function AdminDashboard() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 회원 학습현황 Tab */}
+        {activeTab === 'progress' && (
+          <div className="admin-panel">
+            <h2><i className="fa-solid fa-chart-line" /> 회원 학습현황</h2>
+
+            {/* 검색바 */}
+            <input
+              type="text"
+              className="admin-member-search"
+              placeholder="이름 또는 이메일로 회원 검색..."
+              value={progressSearch}
+              onChange={e => setProgressSearch(e.target.value)}
+            />
+
+            {/* 검색 결과 목록 */}
+            {progressSearch.trim() && (
+              <div className="admin-member-list">
+                {filteredMembers.length === 0 ? (
+                  <p className="admin-empty" style={{ padding: '16px 0' }}>검색 결과가 없습니다.</p>
+                ) : (
+                  filteredMembers.slice(0, 20).map(m => (
+                    <div
+                      key={m.email}
+                      className={`admin-member-item ${selectedMember?.email === m.email ? 'active' : ''}`}
+                      onClick={() => handleSelectMember(m)}
+                    >
+                      <div className="admin-member-item-info">
+                        <strong>{m.name || '(이름 없음)'}</strong>
+                        <span>{m.email}</span>
+                      </div>
+                      <span className="table-badge">{m.source}</span>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
+            {/* 선택된 회원 대시보드 */}
+            {selectedMember && (
+              <div className="admin-member-dashboard">
+                <h3>
+                  <i className="fa-solid fa-user" /> {selectedMember.name || selectedMember.email} 학습 현황
+                </h3>
+
+                {progressLoading ? (
+                  <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                    <div className="loading-spinner" />
+                  </div>
+                ) : (
+                  <>
+                    {/* 필기 통계 */}
+                    <div className="dashboard-stats-grid">
+                      <div className="stat-card">
+                        <div className="stat-label">필기 시험수</div>
+                        <span className="stat-number">{pilgiStats.total}</span>
+                      </div>
+                      <div className="stat-card">
+                        <div className="stat-label">필기 평균</div>
+                        <span className="stat-number">{pilgiStats.avg}점</span>
+                      </div>
+                      <div className="stat-card">
+                        <div className="stat-label">필기 합격률</div>
+                        <span className="stat-number">{pilgiStats.passRate}%</span>
+                      </div>
+                      <div className="stat-card">
+                        <div className="stat-label">필기 합격</div>
+                        <span className="stat-number">{pilgiStats.passCount}회</span>
+                      </div>
+                    </div>
+
+                    {/* 실기 통계 */}
+                    <div className="dashboard-stats-grid" style={{ marginTop: '16px' }}>
+                      <div className="stat-card">
+                        <div className="stat-label">실기 연습수</div>
+                        <span className="stat-number">{silgiStats.total}</span>
+                      </div>
+                      <div className="stat-card">
+                        <div className="stat-label">실기 평균</div>
+                        <span className="stat-number">{silgiStats.avg}점</span>
+                      </div>
+                      <div className="stat-card">
+                        <div className="stat-label">실기 합격률</div>
+                        <span className="stat-number">{silgiStats.passRate}%</span>
+                      </div>
+                      <div className="stat-card">
+                        <div className="stat-label">실기 합격</div>
+                        <span className="stat-number">{silgiStats.passCount}회</span>
+                      </div>
+                    </div>
+
+                    {pilgiStats.total === 0 && silgiStats.total === 0 ? (
+                      <p className="admin-empty">해당 회원의 학습 기록이 없습니다.</p>
+                    ) : (
+                      <>
+                        {/* 차트 영역 */}
+                        <div className="dashboard-charts" style={{ marginTop: '24px' }}>
+                          {pilgiStats.total > 0 && (
+                            <div className="dashboard-card">
+                              <h4>과목별 평균 점수</h4>
+                              <RadarChart scores={memberAvgScores} />
+                            </div>
+                          )}
+                          {pilgiStats.total > 0 && (
+                            <div className="dashboard-card">
+                              <h4>필기 점수 추이</h4>
+                              <BarChart sessions={[...memberPilgi].reverse()} />
+                            </div>
+                          )}
+                        </div>
+
+                        {/* 약점 과목 */}
+                        {weakSubjects.length > 0 && (
+                          <div className="dashboard-card" style={{ marginTop: '16px' }}>
+                            <h4><i className="fa-solid fa-triangle-exclamation" style={{ color: '#F59E0B' }} /> 약점 과목</h4>
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+                              {weakSubjects.map(s => (
+                                <span key={s.code} className="table-badge fail">
+                                  {s.name} ({memberAvgScores[s.code]}점)
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* 최근 필기 시험 */}
+                        {memberPilgi.length > 0 && (
+                          <div className="dashboard-card" style={{ marginTop: '16px' }}>
+                            <h4>최근 필기 시험</h4>
+                            <div className="admin-table-wrap">
+                              <table className="admin-table">
+                                <thead>
+                                  <tr>
+                                    <th>회차</th>
+                                    <th>점수</th>
+                                    <th>합격여부</th>
+                                    <th>응시일</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {memberPilgi.slice(0, 10).map((s: any, i: number) => (
+                                    <tr key={s.id}>
+                                      <td>{memberPilgi.length - i}회</td>
+                                      <td style={{ fontWeight: 700 }}>{s.score_total}점</td>
+                                      <td>
+                                        <span className={`table-badge ${s.is_pass ? 'pass' : 'fail'}`}>
+                                          {s.is_pass ? '합격' : '불합격'}
+                                        </span>
+                                      </td>
+                                      <td>{new Date(s.completed_at).toLocaleDateString('ko-KR')}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* 최근 실기 연습 */}
+                        {memberSilgi.length > 0 && (
+                          <div className="dashboard-card" style={{ marginTop: '16px' }}>
+                            <h4>최근 실기 연습</h4>
+                            <div className="admin-table-wrap">
+                              <table className="admin-table">
+                                <thead>
+                                  <tr>
+                                    <th>회차</th>
+                                    <th>점수</th>
+                                    <th>합격여부</th>
+                                    <th>연습일</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {memberSilgi.slice(0, 10).map((s: any, i: number) => (
+                                    <tr key={s.id}>
+                                      <td>{memberSilgi.length - i}회</td>
+                                      <td style={{ fontWeight: 700 }}>{s.score_total}점</td>
+                                      <td>
+                                        <span className={`table-badge ${s.is_pass ? 'pass' : 'fail'}`}>
+                                          {s.is_pass ? '합격' : '불합격'}
+                                        </span>
+                                      </td>
+                                      <td>{new Date(s.completed_at).toLocaleDateString('ko-KR')}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
               </div>
             )}
           </div>
