@@ -96,10 +96,16 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 
     setLoading(true);
     try {
-      const [subResult, trialResult] = await Promise.all([
-        checkSubscription(user.id, { isAdmin }),
-        checkFreeTrial(user.id),
-      ]);
+      const withTimeout = <T,>(p: Promise<T>, ms: number): Promise<T> =>
+        Promise.race([p, new Promise<never>((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
+
+      const [subResult, trialResult] = await withTimeout(
+        Promise.all([
+          checkSubscription(user.id, { isAdmin }),
+          checkFreeTrial(user.id),
+        ]),
+        10000,
+      );
 
       if (subResult.hasAccess) {
         setHasAccess(true);

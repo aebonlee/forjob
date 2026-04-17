@@ -65,6 +65,7 @@ const GRADE_FILTERS = [
 ];
 
 const COUNT_OPTIONS = [10, 20, 30, 0]; // 0 = all
+const SOLVED_KEY = 'jobpath_solved_silgi';
 
 /* ── Component ── */
 
@@ -116,7 +117,21 @@ export default function PracticeMode() {
   }, [selCategory, selGrade]);
 
   const handleStart = () => {
-    let pool = [...filteredPool];
+    // 이전에 풀었던 문제 필터링 (중복 방지)
+    let solvedNums: number[] = [];
+    try {
+      const raw = localStorage.getItem(SOLVED_KEY);
+      if (raw) solvedNums = JSON.parse(raw);
+    } catch { /* ignore */ }
+
+    let pool = filteredPool.filter(q => !solvedNums.includes(q.num));
+    // pool이 부족하면 초기화 후 전체 사용
+    if (pool.length < Math.min(selCount || filteredPool.length, filteredPool.length) * 0.3) {
+      localStorage.removeItem(SOLVED_KEY);
+      solvedNums = [];
+      pool = [...filteredPool];
+    }
+
     // Shuffle
     for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -184,6 +199,17 @@ export default function PracticeMode() {
       handleReveal();
     }
     clearInterval(timerRef.current);
+
+    // 풀었던 문제 번호 localStorage에 저장 (중복 방지)
+    try {
+      let solved: number[] = [];
+      const raw = localStorage.getItem(SOLVED_KEY);
+      if (raw) solved = JSON.parse(raw);
+      const newNums = questions.map((q: any) => q.num);
+      const merged = [...new Set([...solved, ...newNums])];
+      localStorage.setItem(SOLVED_KEY, JSON.stringify(merged));
+    } catch { /* ignore */ }
+
     setPhase('result');
   };
 

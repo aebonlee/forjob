@@ -8,6 +8,8 @@ import { supabase, TABLES } from '../../lib/supabase';
 import { SUBJECTS } from '../../config/site';
 import { loadPilgiQuestions } from '../../data/pilgiLoader';
 
+const STUDY_STORAGE_KEY = 'jobpath_study_progress';
+
 export default function StudyMode() {
   const [selectedSubject, setSelectedSubject] = useState('all');
   const [questions, setQuestions] = useState([]);
@@ -44,12 +46,39 @@ export default function StudyMode() {
     loadQuestions();
   }, [loadQuestions]);
 
+  // 학습 진행상태 sessionStorage 백업
+  useEffect(() => {
+    if (questions.length && currentIndex > 0) {
+      sessionStorage.setItem(STUDY_STORAGE_KEY, JSON.stringify({
+        selectedSubject, currentIndex, answers, showResult,
+      }));
+    }
+  }, [currentIndex, answers, showResult, selectedSubject, questions.length]);
+
+  // 학습 진행상태 sessionStorage 복원
+  useEffect(() => {
+    if (!questions.length) return;
+    try {
+      const saved = sessionStorage.getItem(STUDY_STORAGE_KEY);
+      if (saved) {
+        const p = JSON.parse(saved);
+        if (p.selectedSubject === selectedSubject) {
+          setCurrentIndex(p.currentIndex || 0);
+          setAnswers(p.answers || {});
+          setShowResult(p.showResult || {});
+        }
+        sessionStorage.removeItem(STUDY_STORAGE_KEY);
+      }
+    } catch { /* ignore */ }
+  }, [questions.length, selectedSubject]);
+
   useEffect(() => {
     if (!user) return;
     supabase.from(TABLES.BOOKMARKS)
       .select('question_id')
       .eq('user_id', user.id)
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) { console.warn('북마크 로드 실패:', error); return; }
         if (data) setBookmarkedIds(data.map(b => b.question_id));
       });
   }, [user]);
@@ -67,16 +96,26 @@ export default function StudyMode() {
 
     const isBookmarked = bookmarkedIds.includes(questionId);
     if (isBookmarked) {
-      await supabase.from(TABLES.BOOKMARKS)
+      setBookmarkedIds(prev => prev.filter(id => id !== questionId));
+      const { error } = await supabase.from(TABLES.BOOKMARKS)
         .delete()
         .eq('user_id', user.id)
         .eq('question_id', questionId);
-      setBookmarkedIds(prev => prev.filter(id => id !== questionId));
+      if (error) {
+        setBookmarkedIds(prev => [...prev, questionId]);
+        showToast('북마크 해제에 실패했습니다.', 'error');
+        return;
+      }
       showToast('북마크가 해제되었습니다.', 'info');
     } else {
-      await supabase.from(TABLES.BOOKMARKS)
-        .insert({ user_id: user.id, question_id: questionId });
       setBookmarkedIds(prev => [...prev, questionId]);
+      const { error } = await supabase.from(TABLES.BOOKMARKS)
+        .insert({ user_id: user.id, question_id: questionId });
+      if (error) {
+        setBookmarkedIds(prev => prev.filter(id => id !== questionId));
+        showToast('북마크 추가에 실패했습니다.', 'error');
+        return;
+      }
       showToast('북마크에 추가되었습니다.', 'success');
     }
   };
