@@ -18,6 +18,7 @@ export function AuthProvider({ children }) {
   const [_profileDismissed, _setProfileDismissed] = useState(
     () => typeof window !== 'undefined' && sessionStorage.getItem(DISMISS_KEY) === '1'
   );
+  const [_signingIn, _setSigningIn] = useState(false);
   const { showToast } = useToast();
 
   // user_profiles 프로필 로드 (프로필 완성 체크용)
@@ -138,6 +139,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   const signInWithGoogle = async () => {
+    if (_signingIn) return;
+    _setSigningIn(true);
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -146,14 +149,19 @@ export function AuthProvider({ children }) {
       if (error) {
         console.error('Google login error:', error.message);
         showToast('Google 로그인에 실패했습니다.', 'error');
+        _setSigningIn(false);
       }
+      // 성공 시 브라우저 redirect → 이후 코드 도달 불필요
     } catch (err: any) {
       console.error('Google login error:', err);
       showToast('Google 로그인에 실패했습니다.', 'error');
+      _setSigningIn(false);
     }
   };
 
   const signInWithKakao = async () => {
+    if (_signingIn) return;
+    _setSigningIn(true);
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'kakao',
@@ -165,27 +173,27 @@ export function AuthProvider({ children }) {
       if (error) {
         console.error('Kakao login error:', error.message);
         showToast('카카오 로그인에 실패했습니다.', 'error');
+        _setSigningIn(false);
       }
     } catch (err: any) {
       console.error('Kakao login error:', err);
       showToast('카카오 로그인에 실패했습니다.', 'error');
+      _setSigningIn(false);
     }
   };
 
   const signOut = async () => {
     try {
-      const { error } = await supabase.auth.signOut();
+      await supabase.auth.signOut();
       clearSharedSession();
-      if (error) {
-        console.error('Logout error:', error.message);
-        showToast('로그아웃에 실패했습니다.', 'error');
-      } else {
-        showToast('로그아웃되었습니다.', 'success');
-      }
+      showToast('로그아웃되었습니다.', 'success');
     } catch (err: any) {
       console.error('Logout error:', err);
+      // signOut 실패해도 로컬 상태 완전 정리 보장
       clearSharedSession();
-      showToast('로그아웃에 실패했습니다.', 'error');
+      setUser(null);
+      setIsAdmin(false);
+      showToast('로그아웃되었습니다.', 'success');
     }
   };
 
@@ -209,7 +217,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, isAdmin, signInWithGoogle, signInWithKakao, signOut }}>
+    <AuthContext.Provider value={{ user, loading, isAdmin, signingIn: _signingIn, signInWithGoogle, signInWithKakao, signOut }}>
       {children}
       {needsProfileCompletion && (
         <ProfileCompleteModal user={user} onComplete={refreshProfile} onDismiss={dismissProfileModal} />

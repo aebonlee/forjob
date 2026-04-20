@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '../../components/SEOHead';
 import AuthGuard from '../../components/AuthGuard';
@@ -29,6 +29,7 @@ function CheckoutContent() {
   const [phone, setPhone] = useState('');
   const [processing, setProcessing] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('');
+  const processingRef = useRef(false); // 동기적 이중결제 방지
 
   const handleAddPlan = (planId: string) => {
     addItem(planId);
@@ -37,6 +38,9 @@ function CheckoutContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // 동��적 이중결제 방지 (React state 업데이트보다 빠르게 차단)
+    if (processingRef.current) return;
+
     if (items.length === 0) {
       showToast('이용권을 선택해 주세요.', 'error');
       return;
@@ -45,7 +49,13 @@ function CheckoutContent() {
       showToast('주문자 정보를 모두 입력해 주세요.', 'error');
       return;
     }
+    // 이메일 형식 검증
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      showToast('올바른 이메일 주소를 입력해 주세요.', 'error');
+      return;
+    }
 
+    processingRef.current = true;
     setProcessing(true);
     const orderNumber = generateOrderNumber();
 
@@ -63,37 +73,39 @@ function CheckoutContent() {
 
       if (!result.success) {
         showToast(result.error || '결제에 실패했습니다.', 'error');
-        setProcessing(false);
         return;
       }
 
-      // Supabase에 주문 저장
+      // Supabase에 주��� 저장 (타임아웃 5초 per attempt)
       const now = new Date();
       let insertFailed = false;
       const failedPayloads: Record<string, unknown>[] = [];
       for (let idx = 0; idx < items.length; idx++) {
         const item = items[idx];
         const itemOrderNumber = items.length > 1 ? `${orderNumber}-${idx + 1}` : orderNumber;
-        const expiresAt = item.days
-          ? new Date(now.getTime() + item.days * 24 * 60 * 60 * 1000).toISOString()
+        const days = item.days;
+        // days 유효성 검증
+        const expiresAt = (days && days > 0 && days <= 400)
+          ? new Date(now.getTime() + days * 24 * 60 * 60 * 1000).toISOString()
           : null;
 
         const orderPayload = {
           order_number: itemOrderNumber,
           user_id: user!.id,
-          user_email: email,
-          user_name: name,
-          user_phone: phone,
+          user_email: email.trim(),
+          user_name: name.trim(),
+          user_phone: phone.trim(),
           plan_type: item.id,
           total_amount: item.price,
           payment_method: 'card',
           payment_status: 'paid',
           portone_payment_id: result.paymentId,
+          portone_tx_id: result.txId,
           paid_at: now.toISOString(),
           expires_at: expiresAt,
         };
 
-        // INSERT 전 localStorage 백업
+        // INSERT 전 localStorage 백업 (paymentId 포함)
         try {
           const pending = JSON.parse(localStorage.getItem('jp_pending_orders') || '[]');
           pending.push(orderPayload);
@@ -102,14 +114,21 @@ function CheckoutContent() {
 
         let saved = false;
         for (let retry = 0; retry < 3; retry++) {
-          const { error: insertError } = await supabase.from(TABLES.ORDERS).insert(orderPayload);
-          if (!insertError) { saved = true; break; }
-          console.error(`주문 저장 실패 (시도 ${retry + 1}/3):`, insertError);
+          try {
+            const insertResult = await Promise.race([
+              supabase.from(TABLES.ORDERS).insert(orderPayload),
+              new Promise<never>((_, reject) => setTimeout(() => reject(new Error('DB 저장 시간 초과')), 5000)),
+            ]);
+            if (!(insertResult as any).error) { saved = true; break; }
+            console.error(`주문 저장 실패 (시도 ${retry + 1}/3):`, (insertResult as any).error);
+          } catch (err) {
+            console.error(`주문 저장 오류 (시도 ${retry + 1}/3):`, err);
+          }
           if (retry < 2) await new Promise(r => setTimeout(r, 1000));
         }
 
         if (saved) {
-          // 성공 시 pending에서 제거
+          // ���공 시 pending에서 제거
           try {
             const pending = JSON.parse(localStorage.getItem('jp_pending_orders') || '[]');
             const filtered = pending.filter((p: any) => p.order_number !== orderPayload.order_number);
@@ -132,18 +151,20 @@ function CheckoutContent() {
       }
 
       clearCart();
-      await refresh();
+      await refresh().catch(() => {});
       if (insertFailed) {
-        showToast('결제는 완료되었으나 주문 기록 저장에 문제가 발생했습니다. 다음 접속 시 자동 복구를 시도합니다.', 'error');
+        showToast('결제는 완료되었으나 주문 기록 저���에 문제가 발생했습니다. 다음 접속 시 자동 복구를 시도합니다.', 'error');
       } else {
         showToast('결제가 완료되었습니다!', 'success');
       }
       navigate('/confirmation', { state: { orderNumber, items, total: cartTotal, paidAt: now.toISOString() } });
     } catch (err: any) {
       console.error(err);
-      showToast('결제 처리 중 오류가 발생했습니다.', 'error');
+      showToast('결제 처리 중 ���류가 발생했습니다.', 'error');
+    } finally {
+      processingRef.current = false;
+      setProcessing(false);
     }
-    setProcessing(false);
   };
 
   return (
