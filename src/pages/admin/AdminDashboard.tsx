@@ -23,7 +23,7 @@ const ITEMS_PER_PAGE = 10;
 
 const TAB_CONFIG: { key: Tab; icon: string; label: string; desc: string }[] = [
   { key: 'members', icon: 'fa-solid fa-users', label: '회원 관리', desc: '등록된 회원 목록을 확인하세요' },
-  { key: 'orders', icon: 'fa-solid fa-credit-card', label: '결제 관리', desc: '포트원 결제 내역을 관리하세요' },
+  { key: 'orders', icon: 'fa-solid fa-credit-card', label: '주문/결제', desc: '포트원 실제 결제 내역을 관리하세요' },
   { key: 'coupons', icon: 'fa-solid fa-ticket', label: '쿠폰 관리', desc: '쿠폰 발행 및 상태를 관리하세요' },
   { key: 'progress', icon: 'fa-solid fa-chart-line', label: '학습 현황', desc: '회원별 학습 데이터를 확인하세요' },
 ];
@@ -165,9 +165,9 @@ export default function AdminDashboard() {
     setLoading(false);
   };
 
-  // 포트원(카드) 결제만 분리 (쿠폰 등록 제외)
+  // 포트원(카드) 결제만 분리 (쿠폰 등록 및 무료 주문 제외)
   const portoneOrders = useMemo(() =>
-    orders.filter(o => o.payment_method !== 'coupon'), [orders]);
+    orders.filter(o => o.payment_method !== 'coupon' && (o.total_amount || 0) > 0), [orders]);
 
   // Stats
   const totalRevenue = portoneOrders
@@ -962,6 +962,26 @@ ${content}
             <div className="admin-panel">
               <h2>쿠폰 관리</h2>
 
+              {/* 쿠폰 요약 카드 */}
+              <div className="admin-order-summary">
+                <div className="admin-order-summary-card">
+                  <span className="admin-order-summary-label">전체 쿠폰</span>
+                  <span className="admin-order-summary-value">{coupons.length}개</span>
+                </div>
+                <div className="admin-order-summary-card paid">
+                  <span className="admin-order-summary-label">활성 쿠폰</span>
+                  <span className="admin-order-summary-value">{activeCoupons}개</span>
+                </div>
+                <div className="admin-order-summary-card">
+                  <span className="admin-order-summary-label">총 사용 횟수</span>
+                  <span className="admin-order-summary-value">{redemptions.length}회</span>
+                </div>
+                <div className="admin-order-summary-card">
+                  <span className="admin-order-summary-label">쿠폰 사용 회원</span>
+                  <span className="admin-order-summary-value">{new Set(redemptions.map(r => r.user_email)).size}명</span>
+                </div>
+              </div>
+
               <div className="admin-coupon-form">
                 <h3><i className="fa-solid fa-plus" /> 쿠폰 발행</h3>
                 <div className="coupon-form-row">
@@ -1004,6 +1024,9 @@ ${content}
                 <p className="admin-empty">발행된 쿠폰이 없습니다.</p>
               ) : (
                 <>
+                  <h3 style={{ margin: '24px 0 12px', fontSize: '15px', fontWeight: 700 }}>
+                    <i className="fa-solid fa-list" /> 쿠폰 목록 ({coupons.length}개)
+                  </h3>
                   <div className="admin-table-wrap">
                     <table className="admin-table">
                       <thead>
@@ -1054,6 +1077,40 @@ ${content}
                     setPage={p => setCurrentPage(prev => ({ ...prev, coupons: p }))}
                   />
                 </>
+              )}
+
+              {/* 쿠폰 사용 내역 */}
+              <h3 style={{ margin: '32px 0 12px', fontSize: '15px', fontWeight: 700 }}>
+                <i className="fa-solid fa-clock-rotate-left" /> 쿠폰 사용 내역 ({redemptions.length}건)
+              </h3>
+              {redemptions.length === 0 ? (
+                <p className="admin-empty">쿠폰 사용 내역이 없습니다.</p>
+              ) : (
+                <div className="admin-table-wrap">
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>쿠폰 코드</th>
+                        <th>이용기간</th>
+                        <th>사용자 이메일</th>
+                        <th>사용일시</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {redemptions.slice(0, 20).map((r: any) => {
+                        const coupon = coupons.find(c => c.id === r.coupon_id);
+                        return (
+                          <tr key={r.id || `${r.coupon_id}-${r.user_id}`}>
+                            <td className="coupon-code-cell">{coupon?.code || '-'}</td>
+                            <td>{coupon?.days || 1}일</td>
+                            <td>{r.user_email || '-'}</td>
+                            <td>{new Date(r.created_at).toLocaleString('ko-KR')}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           )}
