@@ -21,11 +21,11 @@ type Tab = 'members' | 'orders' | 'coupons' | 'progress';
 
 const ITEMS_PER_PAGE = 10;
 
-const TAB_CONFIG: { key: Tab; icon: string; label: string; desc: string }[] = [
-  { key: 'members', icon: 'fa-solid fa-users', label: '회원 관리', desc: '등록된 회원 목록을 확인하세요' },
-  { key: 'orders', icon: 'fa-solid fa-credit-card', label: '주문/결제', desc: '포트원 실제 결제 내역을 관리하세요' },
-  { key: 'coupons', icon: 'fa-solid fa-ticket', label: '쿠폰 관리', desc: '쿠폰 발행 및 상태를 관리하세요' },
-  { key: 'progress', icon: 'fa-solid fa-chart-line', label: '학습 현황', desc: '회원별 학습 데이터를 확인하세요' },
+const TAB_CONFIG: { key: Tab; icon: string; label: string; desc: string; group: string }[] = [
+  { key: 'members', icon: 'fa-solid fa-users', label: '회원 관리', desc: '등록된 회원 목록을 확인하세요', group: '회원' },
+  { key: 'orders', icon: 'fa-solid fa-credit-card', label: '주문/결제', desc: '포트원 실제 결제 내역을 관리하세요', group: '상거래' },
+  { key: 'coupons', icon: 'fa-solid fa-ticket', label: '쿠폰 관리', desc: '쿠폰 발행 및 사용 내역을 관리하세요', group: '상거래' },
+  { key: 'progress', icon: 'fa-solid fa-chart-line', label: '학습 현황', desc: '회원별 학습 데이터를 확인하세요', group: '학습' },
 ];
 
 /* ── Sort helper ────────────────────────── */
@@ -626,16 +626,20 @@ ${content}
             <p>관리 패널</p>
           </div>
           <nav className="admin-sidebar-nav">
-            {TAB_CONFIG.map(tab => (
-              <button
-                key={tab.key}
-                className={`admin-nav-item ${activeTab === tab.key ? 'active' : ''}`}
-                onClick={() => handleTabChange(tab.key)}
-              >
-                <i className={tab.icon} />
-                {tab.label}
-                <span className="admin-nav-badge">{badgeCounts[tab.key]}</span>
-              </button>
+            {TAB_CONFIG.map((tab, idx) => (
+              <div key={tab.key}>
+                {(idx === 0 || TAB_CONFIG[idx - 1].group !== tab.group) && (
+                  <div className="admin-nav-group">{tab.group}</div>
+                )}
+                <button
+                  className={`admin-nav-item ${activeTab === tab.key ? 'active' : ''}`}
+                  onClick={() => handleTabChange(tab.key)}
+                >
+                  <i className={tab.icon} />
+                  {tab.label}
+                  <span className="admin-nav-badge">{badgeCounts[tab.key]}</span>
+                </button>
+              </div>
             ))}
           </nav>
           <div className="admin-sidebar-footer">
