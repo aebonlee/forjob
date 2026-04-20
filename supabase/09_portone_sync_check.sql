@@ -55,7 +55,7 @@ WHERE o.user_name LIKE '%봉은수%'
 SELECT u.id, u.email, u.created_at,
        u.raw_user_meta_data->>'full_name' AS full_name,
        u.raw_user_meta_data->>'name' AS name,
-       u.app_metadata->>'provider' AS provider
+       u.raw_app_meta_data->>'provider' AS provider
 FROM auth.users u
 WHERE u.raw_user_meta_data->>'full_name' LIKE '%김성길%'
    OR u.raw_user_meta_data->>'name' LIKE '%김성길%'
