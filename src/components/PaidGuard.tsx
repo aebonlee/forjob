@@ -12,6 +12,11 @@ export default function PaidGuard({ children, allowFreeTrial = false }: PaidGuar
   const { user, loading: authLoading, isAdmin } = useAuth();
   const { hasAccess, freeTrialRemaining, loading: subLoading } = useSubscription();
 
+  // 관리자는 구독 확인 없이 즉시 바이패스
+  if (!authLoading && isAdmin) {
+    return <>{children}</>;
+  }
+
   if (authLoading || subLoading) {
     return <div className="loading-page"><div className="loading-spinner" /></div>;
   }
@@ -27,11 +32,6 @@ export default function PaidGuard({ children, allowFreeTrial = false }: PaidGuar
         </div>
       </div>
     );
-  }
-
-  // 관리자 바이패스
-  if (isAdmin) {
-    return <>{children}</>;
   }
 
   // 유료 접근 권한 있음
