@@ -5,6 +5,7 @@ import { useIdleTimeout } from '../hooks/useIdleTimeout';
 import { SUPERADMIN_EMAILS } from '../config/admin';
 import ProfileCompleteModal from '../components/ProfileCompleteModal';
 
+import PaymentNudgePopup from '../components/PaymentNudgePopup';
 const AuthContext = createContext({});
 
 const SITE_URL = import.meta.env.VITE_SITE_URL || window.location.origin;
@@ -222,6 +223,9 @@ export function AuthProvider({ children }) {
       {needsProfileCompletion && (
         <ProfileCompleteModal user={user} onComplete={refreshProfile} onDismiss={dismissProfileModal} />
       )}
+    {isLoggedIn && user && !needsProfileCompletion && (
+      <PaymentNudgePopup user={user} siteSlug="jobpath" />
+    )}
     </AuthContext.Provider>
   );
 }

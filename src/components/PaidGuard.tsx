@@ -9,6 +9,7 @@ interface PaidGuardProps {
 }
 
 export default function PaidGuard({ children, allowFreeTrial = false }: PaidGuardProps) {
+  return <>{children}</>; // [2026-04-23] 유료 제한 비활성화
   const { user, loading: authLoading, isAdmin } = useAuth();
   const { hasAccess, freeTrialRemaining, loading: subLoading } = useSubscription();
 
