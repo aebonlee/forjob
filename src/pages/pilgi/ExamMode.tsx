@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import Timer from '../../components/Timer';
 import QuestionCard from '../../components/QuestionCard';
@@ -139,10 +139,13 @@ export default function ExamMode() {
     }
   }, [user, bookmarkedIds, showToast]);
 
+  const handleSubmitRef = useRef(handleSubmit);
+  handleSubmitRef.current = handleSubmit;
+
   const handleTimeUp = useCallback(() => {
     showToast('시간이 종료되었습니다. 자동 제출합니다.', 'info');
-    handleSubmit();
-  }, []);
+    handleSubmitRef.current();
+  }, [showToast]);
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -178,24 +181,28 @@ export default function ExamMode() {
         // Update wrong answers
         const wrongQuestions = questions.filter(q => answers[q.id] && answers[q.id] !== q.correct_answer);
         for (const q of wrongQuestions) {
-          const { data: existing } = await supabase
-            .from(TABLES.WRONG_ANSWERS)
-            .select('id, wrong_count')
-            .eq('user_id', user.id)
-            .eq('question_id', q.id)
-            .single();
+          try {
+            const { data: existing } = await supabase
+              .from(TABLES.WRONG_ANSWERS)
+              .select('id, wrong_count')
+              .eq('user_id', user.id)
+              .eq('question_id', q.id)
+              .maybeSingle();
 
-          if (existing) {
-            await supabase.from(TABLES.WRONG_ANSWERS)
-              .update({ wrong_count: existing.wrong_count + 1, resolved: false })
-              .eq('id', existing.id);
-          } else {
-            await supabase.from(TABLES.WRONG_ANSWERS).insert({
-              user_id: user.id,
-              question_id: q.id,
-              wrong_count: 1,
-              resolved: false,
-            });
+            if (existing) {
+              await supabase.from(TABLES.WRONG_ANSWERS)
+                .update({ wrong_count: existing.wrong_count + 1, resolved: false })
+                .eq('id', existing.id);
+            } else {
+              await supabase.from(TABLES.WRONG_ANSWERS).insert({
+                user_id: user.id,
+                question_id: q.id,
+                wrong_count: 1,
+                resolved: false,
+              });
+            }
+          } catch (wErr) {
+            console.warn('오답 기록 실패:', q.id, wErr);
           }
         }
       }
