@@ -42,7 +42,7 @@ export function RadarChart({ scores }) {
             grid: { color: 'rgba(0,0,0,0.08)' },
             angleLines: { color: 'rgba(0,0,0,0.08)' },
             pointLabels: {
-              font: { size: 12, weight: '600', family: 'Noto Sans KR' },
+              font: { size: 12, weight: 600, family: 'Noto Sans KR' },
               color: '#4B5563',
             },
           },
