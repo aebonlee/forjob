@@ -20,7 +20,7 @@ function generateOrderNumber() {
 function CheckoutContent() {
   const { user } = useAuth();
   const { items, clearCart, cartTotal, addItem, removeItem } = useCart();
-  const { refresh } = useSubscription();
+  const { refresh, grantAccess } = useSubscription();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -150,10 +150,16 @@ function CheckoutContent() {
         } catch { /* 무시 */ }
       }
 
+      // 결제 성공 시 즉시 접근 권한 부여 (refresh 실패에 의존하지 않음)
+      const latestExpiryMs = Math.max(
+        ...items.map(item => now.getTime() + ((item.days && item.days > 0) ? item.days : 90) * 24 * 60 * 60 * 1000)
+      );
+      grantAccess(new Date(latestExpiryMs), { plan_type: items[0].id, payment_method: 'card' });
+
       clearCart();
       await refresh().catch(() => {});
       if (insertFailed) {
-        showToast('결제는 완료되었으나 주문 기록 저���에 문제가 발생했습니다. 다음 접속 시 자동 복구를 시도합니다.', 'error');
+        showToast('결제는 완료되었으나 주문 기록 저장에 문제가 발생했습니다. 다음 접속 시 자동 복구를 시도합니다.', 'error');
       } else {
         showToast('결제가 완료되었습니다!', 'success');
       }

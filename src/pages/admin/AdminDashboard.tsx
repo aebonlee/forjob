@@ -81,6 +81,8 @@ export default function AdminDashboard() {
   const [couponQty, setCouponQty] = useState(10);
   const [couponDays, setCouponDays] = useState(1);
   const [generating, setGenerating] = useState(false);
+  const [memberFilter, setMemberFilter] = useState<'all' | 'paid' | 'free'>('all');
+  const [memberSearch, setMemberSearch] = useState('');
   const [orderFilter, setOrderFilter] = useState('all');
   const [orderSearch, setOrderSearch] = useState('');
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
@@ -577,8 +579,46 @@ ${content}
     '365day': '365일 이용권',
   };
 
+  // 회원 활성 상태 판별 함수
+  const isMemberActive = useCallback((email: string) => {
+    const userOrders = orders.filter(o => (o.user_email || '').toLowerCase() === email && o.payment_method !== 'coupon');
+    const paidOrders = userOrders.filter(o => o.payment_status === 'paid');
+    const latestPaid = paidOrders[0];
+    const orderActive = latestPaid?.expires_at && new Date(latestPaid.expires_at) > new Date();
+    if (orderActive) return true;
+    const userRedemptions = redemptions.filter(r => (r.user_email || '').toLowerCase() === email);
+    for (const r of userRedemptions) {
+      const cp = coupons.find(c => c.id === r.coupon_id);
+      const days = cp?.days || 1;
+      const exp = new Date(new Date(r.created_at).getTime() + days * 86400000);
+      if (exp > new Date()) return true;
+    }
+    return false;
+  }, [orders, redemptions, coupons]);
+
+  // 회원 필터링 (전체/유료/일반)
+  const filteredMembersForTab = useMemo(() => {
+    let list = members;
+    if (memberFilter === 'paid') {
+      list = list.filter(m => isMemberActive(m.email));
+    } else if (memberFilter === 'free') {
+      list = list.filter(m => !isMemberActive(m.email));
+    }
+    if (memberSearch.trim()) {
+      const q = memberSearch.toLowerCase();
+      list = list.filter(m =>
+        (m.name || '').toLowerCase().includes(q) ||
+        (m.email || '').toLowerCase().includes(q)
+      );
+    }
+    return list;
+  }, [members, memberFilter, memberSearch, isMemberActive]);
+
+  // 유료/무료 회원 수
+  const paidMemberCount = useMemo(() => members.filter(m => isMemberActive(m.email)).length, [members, isMemberActive]);
+
   // ── Sorted & paginated data ──
-  const sortedMembers = useMemo(() => sortItems(members, 'members'), [members, sortConfig.members]);
+  const sortedMembers = useMemo(() => sortItems(filteredMembersForTab, 'members'), [filteredMembersForTab, sortConfig.members]);
   const pagedMembers = useMemo(() => paginate(sortedMembers, 'members'), [sortedMembers, currentPage.members]);
 
   const sortedOrders = useMemo(() => sortItems(filteredOrders, 'orders'), [filteredOrders, sortConfig.orders]);
@@ -683,9 +723,32 @@ ${content}
           {/* ═══════ Members Tab ═══════ */}
           {activeTab === 'members' && (
             <div className="admin-panel">
-              <h2>회원 목록 ({members.length}명)</h2>
-              {members.length === 0 ? (
-                <p className="admin-empty">등록된 회원이 없습니다.</p>
+              <h2>회원 목록 ({filteredMembersForTab.length}명)</h2>
+
+              {/* 회원 필터 + 검색 */}
+              <div className="admin-order-toolbar">
+                <div className="admin-order-filters">
+                  <button className={`admin-order-filter-btn ${memberFilter === 'all' ? 'active' : ''}`} onClick={() => { setMemberFilter('all'); setCurrentPage(prev => ({ ...prev, members: 1 })); }}>
+                    전체 ({members.length})
+                  </button>
+                  <button className={`admin-order-filter-btn ${memberFilter === 'paid' ? 'active' : ''}`} onClick={() => { setMemberFilter('paid'); setCurrentPage(prev => ({ ...prev, members: 1 })); }}>
+                    유료회원 ({paidMemberCount})
+                  </button>
+                  <button className={`admin-order-filter-btn ${memberFilter === 'free' ? 'active' : ''}`} onClick={() => { setMemberFilter('free'); setCurrentPage(prev => ({ ...prev, members: 1 })); }}>
+                    일반회원 ({members.length - paidMemberCount})
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  className="admin-order-search"
+                  placeholder="이름, 이메일 검색..."
+                  value={memberSearch}
+                  onChange={e => { setMemberSearch(e.target.value); setCurrentPage(prev => ({ ...prev, members: 1 })); }}
+                />
+              </div>
+
+              {filteredMembersForTab.length === 0 ? (
+                <p className="admin-empty">해당 조건의 회원이 없습니다.</p>
               ) : (
                 <>
                   <div className="admin-table-wrap">
