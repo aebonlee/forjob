@@ -117,11 +117,12 @@ export default function AdminDashboard() {
 
   const loadData = async () => {
     setLoading(true);
-    const [ordersRes, couponsRes, profilesRes, redemptionsRes] = await Promise.all([
+    const [ordersRes, couponsRes, profilesRes, redemptionsRes, examRes] = await Promise.all([
       supabase.from(TABLES.ORDERS).select('*').order('created_at', { ascending: false }),
       supabase.from(TABLES.COUPONS).select('*').order('created_at', { ascending: false }),
       supabase.from(TABLES.PROFILES).select('*').order('created_at', { ascending: false }),
       supabase.from(TABLES.COUPON_REDEMPTIONS).select('*').order('created_at', { ascending: false }),
+      supabase.from(TABLES.EXAM_SESSIONS).select('user_id, completed_at').not('completed_at', 'is', null).order('completed_at', { ascending: false }),
     ]);
     if (ordersRes.error) console.error('[Admin] orders 조회 오류:', ordersRes.error.message);
     if (couponsRes.error) console.error('[Admin] coupons 조회 오류:', couponsRes.error.message);
@@ -132,15 +133,21 @@ export default function AdminDashboard() {
     if (couponsRes.data) setCoupons(couponsRes.data);
     if (redemptionsRes.data) setRedemptions(redemptionsRes.data);
 
-    // 회원 목록: 프로필 기반 + 주문/쿠폰 데이터 보강
-    const emailMap: Record<string, { email: string; name: string; phone: string; firstSeen: string; lastActivity: string; source: string }> = {};
-
+    // jobpath 실제 활동 회원만 표시 (주문/쿠폰/시험 응시 이력 있는 사용자)
+    // 프로필은 auth trigger로 전체 사이트 사용자가 생성되므로 활동 기반으로 필터링
+    const profileMap: Record<string, any> = {};
     (profilesRes.data || []).forEach((p: any) => {
-      const e = (p.email || '').toLowerCase();
-      if (!e) return;
-      emailMap[e] = { email: e, name: p.name || '', phone: '', firstSeen: p.created_at, lastActivity: p.created_at, source: '가입' };
+      if (p.id) profileMap[p.id] = p;
     });
 
+    // 시험 응시한 user_id 수집
+    const examUserIds = new Set<string>();
+    (examRes.data || []).forEach((e: any) => { if (e.user_id) examUserIds.add(e.user_id); });
+
+    // 활동 기반 회원 목록 구성
+    const emailMap: Record<string, { email: string; name: string; phone: string; firstSeen: string; lastActivity: string; source: string }> = {};
+
+    // 1) 주문 이력 사용자
     (ordersRes.data || []).forEach((o: any) => {
       const e = (o.user_email || '').toLowerCase();
       if (!e) return;
@@ -153,6 +160,7 @@ export default function AdminDashboard() {
       }
     });
 
+    // 2) 쿠폰 사용 사용자
     (redemptionsRes.data || []).forEach((r: any) => {
       const e = (r.user_email || '').toLowerCase();
       if (!e) return;
@@ -161,6 +169,15 @@ export default function AdminDashboard() {
       } else {
         if (new Date(r.created_at) > new Date(emailMap[e].lastActivity)) emailMap[e].lastActivity = r.created_at;
       }
+    });
+
+    // 3) 시험 응시 사용자 (프로필에서 이메일 매칭)
+    examUserIds.forEach(uid => {
+      const p = profileMap[uid];
+      if (!p) return;
+      const e = (p.email || '').toLowerCase();
+      if (!e || emailMap[e]) return; // 이미 주문/쿠폰으로 등록된 경우 스킵
+      emailMap[e] = { email: e, name: p.name || '', phone: '', firstSeen: p.created_at, lastActivity: p.created_at, source: '학습' };
     });
 
     setMembers(Object.values(emailMap).sort((a, b) => new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime()));
