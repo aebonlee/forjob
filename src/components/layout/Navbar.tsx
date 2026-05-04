@@ -206,16 +206,28 @@ export default function Navbar() {
               </Link>
             </li>
           )}
-          <li>
-            {user ? (
-              <button className="mobile-nav-link" onClick={signOut} style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left', fontFamily: 'inherit', fontSize: 16 }}>
+        </ul>
+
+        {/* 모바일 하단 사용자 영역 */}
+        <div className="mobile-menu-user">
+          {user ? (
+            <>
+              <div className="mobile-user-info">
+                <i className="fa-solid fa-circle-user" />
+                <span>{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
+              </div>
+              <button className="mobile-logout-btn" onClick={signOut}>
+                <i className="fa-solid fa-right-from-bracket" />
                 로그아웃
               </button>
-            ) : (
-              <Link to="/login" className="mobile-nav-link">로그인</Link>
-            )}
-          </li>
-        </ul>
+            </>
+          ) : (
+            <Link to="/login" className="mobile-login-btn">
+              <i className="fa-solid fa-right-to-bracket" />
+              로그인
+            </Link>
+          )}
+        </div>
         <div className="mobile-menu-actions">
           <div className="color-picker-wrapper" ref={mobileColorPickerRef}>
             <button
