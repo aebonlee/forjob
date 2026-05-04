@@ -581,17 +581,23 @@ ${content}
 
   // 회원 활성 상태 판별 함수
   const isMemberActive = useCallback((email: string) => {
+    const now = new Date();
     const userOrders = orders.filter(o => (o.user_email || '').toLowerCase() === email && o.payment_method !== 'coupon');
     const paidOrders = userOrders.filter(o => o.payment_status === 'paid');
-    const latestPaid = paidOrders[0];
-    const orderActive = latestPaid?.expires_at && new Date(latestPaid.expires_at) > new Date();
-    if (orderActive) return true;
+    for (const o of paidOrders) {
+      if (o.expires_at && new Date(o.expires_at) > now) return true;
+      // expires_at이 null인 경우: paid_at 기준 90일 유효
+      if (!o.expires_at && o.paid_at) {
+        const fallback = new Date(new Date(o.paid_at).getTime() + 90 * 86400000);
+        if (fallback > now) return true;
+      }
+    }
     const userRedemptions = redemptions.filter(r => (r.user_email || '').toLowerCase() === email);
     for (const r of userRedemptions) {
       const cp = coupons.find(c => c.id === r.coupon_id);
       const days = cp?.days || 1;
       const exp = new Date(new Date(r.created_at).getTime() + days * 86400000);
-      if (exp > new Date()) return true;
+      if (exp > now) return true;
     }
     return false;
   }, [orders, redemptions, coupons]);
@@ -774,20 +780,8 @@ ${content}
                         {pagedMembers.map(member => {
                           const email = member.email;
                           const userOrders = orders.filter(o => (o.user_email || '').toLowerCase() === email && o.payment_method !== 'coupon');
-                          const paidOrders = userOrders.filter(o => o.payment_status === 'paid');
-                          const latestPaid = paidOrders[0];
-                          const orderActive = latestPaid?.expires_at && new Date(latestPaid.expires_at) > new Date();
                           const userRedemptions = redemptions.filter(r => (r.user_email || '').toLowerCase() === email);
-                          let couponActive = false;
-                          if (userRedemptions.length > 0) {
-                            for (const r of userRedemptions) {
-                              const cp = coupons.find(c => c.id === r.coupon_id);
-                              const days = cp?.days || 1;
-                              const exp = new Date(new Date(r.created_at).getTime() + days * 86400000);
-                              if (exp > new Date()) { couponActive = true; break; }
-                            }
-                          }
-                          const isActive = orderActive || couponActive;
+                          const isActive = isMemberActive(email);
                           return (
                             <tr key={email}>
                               <td style={{ fontWeight: 600 }}>{member.name || '-'}</td>
@@ -798,7 +792,7 @@ ${content}
                               <td>{new Date(member.firstSeen).toLocaleDateString('ko-KR')}</td>
                               <td>
                                 <span className={`table-badge ${isActive ? 'pass' : ''}`}>
-                                  {isActive ? (couponActive && !orderActive ? '쿠폰 이용중' : '이용중') : '만료/없음'}
+                                  {isActive ? '이용중' : '만료/없음'}
                                 </span>
                               </td>
                             </tr>
@@ -1219,23 +1213,8 @@ ${content}
                         {pagedProgress.map(member => {
                           const email = member.email;
                           const userOrders = orders.filter(o => (o.user_email || '').toLowerCase() === email);
-                          const paidOrders = userOrders.filter(o => o.payment_status === 'paid');
-                          const latestPaid = paidOrders[0];
-                          const orderActive = latestPaid?.expires_at && new Date(latestPaid.expires_at) > new Date();
-                          const userRedemptions = redemptions.filter(r => (r.user_email || '').toLowerCase() === email);
-                          let couponActive = false;
-                          if (userRedemptions.length > 0) {
-                            for (const r of userRedemptions) {
-                              const cp = coupons.find(c => c.id === r.coupon_id);
-                              const days = cp?.days || 1;
-                              const exp = new Date(new Date(r.created_at).getTime() + days * 86400000);
-                              if (exp > new Date()) { couponActive = true; break; }
-                            }
-                          }
-                          const isActive = orderActive || couponActive;
-                          const statusText = isActive
-                            ? (couponActive && !orderActive ? '쿠폰 이용중' : '이용중')
-                            : (userOrders.length > 0 ? '만료' : '미결제');
+                          const isActive = isMemberActive(email);
+                          const statusText = isActive ? '이용중' : (userOrders.length > 0 ? '만료' : '미결제');
 
                           return (
                             <tr key={email}>

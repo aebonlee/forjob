@@ -29,6 +29,7 @@ export async function checkSubscription(userId, { isAdmin = false } = {}) {
     .order('created_at', { ascending: false });
 
   if (!error && data?.length) {
+    // expires_at이 있는 경우: 미만료 주문 필터
     const active = data
       .filter(o => o.expires_at && new Date(o.expires_at) > now)
       .sort((a, b) => new Date(b.expires_at) - new Date(a.expires_at));
@@ -39,6 +40,19 @@ export async function checkSubscription(userId, { isAdmin = false } = {}) {
         subscription: active[0],
         expiresAt: new Date(active[0].expires_at),
       };
+    }
+
+    // expires_at이 null인 결제완료 주문: paid_at 기준 90일 유효로 간주
+    const nullExpiry = data.filter(o => !o.expires_at && o.paid_at);
+    for (const o of nullExpiry) {
+      const fallbackExpiry = new Date(new Date(o.paid_at).getTime() + 90 * 24 * 60 * 60 * 1000);
+      if (fallbackExpiry > now) {
+        return {
+          hasAccess: true,
+          subscription: o,
+          expiresAt: fallbackExpiry,
+        };
+      }
     }
   }
 
