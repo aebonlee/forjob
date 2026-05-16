@@ -757,6 +757,11 @@
     .admin-main { padding: 24px; }
 }
 @media (max-width: 768px) {
+    /* Touch target minimum size */
+    .btn, .nav-login-btn, button:not(.mobile-toggle) {
+        min-height: 44px;
+    }
+
     .admin-sidebar {
         position: fixed;
         top: 0;
